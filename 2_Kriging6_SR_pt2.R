@@ -100,7 +100,7 @@ for (m in 1:length(tot_size)){
   # "sensobol" package has a special design for a sobol matrix used for the analysis,
   #     N here is the length of the matrix.
   N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
-  Sobol_Kriging_convergesize<- N
+  Sobol_Kriging_convergesize<- tot_size[m]
   
   print(paste0("checking convergence of input ranking at a sample size of ", N))
   

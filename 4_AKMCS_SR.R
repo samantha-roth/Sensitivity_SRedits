@@ -148,7 +148,7 @@ for (k in 1:3){
     
     # Next perform the sensitivity analysis
     N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
-    Sobol_AKMCS_convergesize<- N
+    Sobol_AKMCS_convergesize<- tot_size[m]
     print(paste0("checking convergence of input ranking at a sample size of ",N))
     
     # Time for sensitivity analysis
