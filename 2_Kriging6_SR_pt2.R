@@ -102,7 +102,7 @@ for (m in 1:length(tot_size)){
   N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
   Sobol_Kriging_convergesize<- tot_size[m]
   
-  print(paste0("checking convergence of input ranking at a sample size of ", N))
+  print(paste0("checking convergence of input ranking at a sample size of ", tot_size[m]))
   
   # Sensitivity analysis time
   start.time<-Sys.time()

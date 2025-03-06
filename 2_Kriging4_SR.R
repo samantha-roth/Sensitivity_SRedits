@@ -16,11 +16,13 @@ set.seed(3)
 
 # Define the test model in each dimension, build the Kriging emulator and perform the Sobol analysis
 k=4
-  
+
   T_Kriging<- vector()
   T_pred_Kriging<- vector()
   T_KrigingSobol<- vector()
   T_check_Kriging<- vector()
+  T_LHS_Kriging<- vector()
+  T_model_Kriging<- vector()
   
   # model dimension
   d <- D[k]
@@ -31,65 +33,81 @@ k=4
   
   # The training samples for emulator quality control
   # Select 20,000 samples by Latin Hypercube Sampling (LHS)
-  x_test <- randomLHS(20000,d)
+  x_test <- randomLHS(2e4,d)
   
   # Folder for d dimension test scenario
-  folder <- paste(folderpath,d,"D/Kriging",sep="")
-  if (Testmodel_ind==2){
-    folder <- paste(folderpath,"Hymod/Kriging",sep="") 
-  }
-  if (Testmodel_ind==3){
-    folder <- paste(folderpath,"SacSma/Kriging",sep="") 
-  }
-  if (!dir.exists(folder)){
-    dir.create(folder, recursive = TRUE)
-  }
+  folder <- paste0(folderpath,d,"D/Kriging")
   
-  save(x_test,file = paste(folder,"/x_test",sep=""))
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
-  # A while loop includes the stopping criterion
-  while (1>0){
-    # Begin with the base sample size (also sampled by LHS)
-    X_GP <- randomLHS(Kriging_size,d)
-    # Evaluate the model to get their true outputs
-    if (Testmodel_ind >= 2){
-      Y_GP <- apply(Mapping(X_GP,Range),1,Testmodel) 
-    } else {
+  save(x_test,file = paste0(folder,"/x_test"))
+  
+    # A while loop includes the stopping criterion
+    while (1>0){
+      # Begin with the base sample size (also sampled by LHS)
+      if(length(Kriging_size_vec)==1){
+        start.time<- Sys.time()
+        X_GP <- randomLHS(Kriging_size,d)
+        end.time<- Sys.time()
+        LHS_time <- difftime(end.time,start.time, units = "secs")
+        T_LHS_Kriging<- c(T_LHS_Kriging,LHS_time)
+      }
+      if(length(Kriging_size_vec)>1){
+        #Increase the size of the LHS sample, but don't get rid of the sample you already have
+        #Also record the time it takes
+        start.time<- Sys.time()
+        X_GP<- augmentLHS(X_GP,d)
+        end.time<- Sys.time()
+        LHS_time <- difftime(end.time,start.time, units = "secs")
+        T_LHS_Kriging<- c(T_LHS_Kriging,LHS_time)
+      }
+      
+      # Evaluate the model to get their true outputs
+      start.time<- Sys.time()
       Y_GP <- apply(X_GP,1,Testmodel)
+      end.time <- Sys.time()
+      model_time <- difftime(end.time,start.time, units = "secs")
+      T_model_Kriging<- c(T_model_Kriging,model_time)
+      
+
+      # Record the Kriging model evaluation time
+      start.time <- Sys.time()
+      GPmodel <- GP_fit(X_GP,Y_GP)
+      end.time <- Sys.time()
+      fit_time <- difftime(end.time,start.time, units = "secs")
+      T_Kriging<- c(T_Kriging,fit_time)
+      
+      # Emulator convergence check
+      # First get the standard error of all the training samples
+      start.time<- Sys.time()
+      a <- predict(GPmodel,x_test)
+      end.time<- Sys.time()
+      pred_time<- difftime(end.time,start.time, units = "secs")
+      T_pred_Kriging<- c(T_pred_Kriging, pred_time)
+      
+      std <- sqrt(a$MSE)
+      print(paste0("k =",k,", max(U) =",max(std),", range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+      
+      if (max(std)<=(max(a$Y_hat)-min(a$Y_hat))/20) save(a,file = paste0(folder,"/a"))
+      
+      # Save this time and the required sample size
+      save(X_GP,file = paste0(folder,"/X_GP"))
+      save(T_model_Kriging,file = paste0(folder,"/T_model_Kriging"))
+      save(T_LHS_Kriging,file = paste0(folder,"/T_LHS_Kriging"))
+      save(T_Kriging,file = paste0(folder,"/T_Kriging"))
+      save(T_pred_Kriging,file = paste0(folder,"/T_pred_Kriging"))
+      save(Kriging_size,file = paste0(folder,"/Kriging_size"))
+      save(Kriging_size_vec,file = paste0(folder,"/Kriging_size_vec"))
+      
+      # If all the standard errors are less than or equal to 1, then convergence is reached, else add sample size
+      if (max(std)<=(max(a$Y_hat)-min(a$Y_hat))/20){
+        break
+      }else{
+        Kriging_size <- Kriging_size + d
+        Kriging_size_vec<- c(Kriging_size_vec,Kriging_size)
+      }
     }
-    
-    # Record the Kriging model evaluation time
-    start.time <- Sys.time()
-    GPmodel <- GP_fit(X_GP,Y_GP)
-    end.time <- Sys.time()
-    fit_time <- difftime(end.time,start.time, units = "secs")
-    T_Kriging<- c(T_Kriging,fit_time)
-    
-    # Emulator convergence check
-    # First get the standard error of all the training samples
-    start.time<- Sys.time()
-    a <- predict(GPmodel,x_test)
-    end.time<- Sys.time()
-    pred_time<- difftime(end.time,start.time, units = "secs")
-    T_pred_Kriging<- c(T_pred_Kriging, pred_time)
-    
-    std <- sqrt(a$MSE)
-    print(paste("k =",k,"max(U) =",max(std),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20,sep=" "))
-    
-    # Save this time and the required sample size
-    save(T_Kriging,file = paste(folder,"/T_Kriging",sep=""))
-    save(T_pred_Kriging,file = paste(folder,"/T_pred_Kriging",sep=""))
-    save(Kriging_size,file = paste(folder,"/Kriging_size",sep=""))
-    save(Kriging_size_vec,file = paste(folder,"/Kriging_size_vec",sep=""))
-    save(a,file = paste(folder,"/a",sep=""))
-    # If all the standard errors are less than or equal to 1, then convergence is reached, else add sample size
-    if (max(std)<=(max(a$Y_hat)-min(a$Y_hat))/20){
-      break
-    } else {
-      Kriging_size <- Kriging_size + d
-      Kriging_size_vec<- c(Kriging_size_vec,Kriging_size)
-    }
-  }
+
   
   T_KrigingSobol<- vector()
   T_check_Kriging<- vector()
@@ -101,7 +119,7 @@ k=4
     N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
     Sobol_Kriging_convergesize<- tot_size[m]
     
-    print(paste0("checking convergence of input ranking at a sample size of ", N))
+    print(paste0("checking convergence of input ranking at a sample size of ", tot_size[m]))
     
     # Sensitivity analysis time
     start.time<-Sys.time()
@@ -118,7 +136,6 @@ k=4
     T_KrigingSobol<-c(T_KrigingSobol,time_sobol)
     
     # convergence of ranking:
-    #  
     
     start.time <- Sys.time()
     
@@ -164,3 +181,5 @@ k=4
     }
   }
   
+
+

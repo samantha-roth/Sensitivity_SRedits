@@ -1,3 +1,4 @@
+
 # Sobol based on the Adaptive Kriging combined with Monte Carlo Sampling (AKMCS) method
 # Note: This script also takes an extremely long time when dealing with high-dimensional
 #       models. Again change the dimension vector D for code replication check. 
@@ -13,23 +14,19 @@ print("4_AKMCS_SR.R")
 set.seed(4)
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
-for (k in 1:3){
-
+for(k in 1:3){
+  
   T_AKMCS<- vector()
   T_pred_AKMCS<- vector()
   T_AKMCSSobol<- vector()
   T_check_AKMCS<- vector()
+  T_model_AKMCS<- vector()
   
   # model dimension
   d <- D[k]
   
   folder<-paste0(folderpath,d,"D/AKMCS")
-  if (Testmodel_ind==2){
-    folder <- paste0(folderpath,"Hymod/AKMCS") 
-  }
-  if (Testmodel_ind==3){
-    folder <- paste0(folderpath,"SacSma/AKMCS") 
-  }
+  
   if (!dir.exists(folder)){
     dir.create(folder, recursive = TRUE)
   }
@@ -41,8 +38,6 @@ for (k in 1:3){
   set.seed(4)
   candidate_size <- 20000
   X <- randomLHS(candidate_size,d)
-  
-  #Y <- apply(X,1,Testmodel)
   
   # Save these training samples
   save(X,file = paste0(folder,"/initial_sample"))
@@ -56,14 +51,13 @@ for (k in 1:3){
   # Update the used samples and remaining samples
   x <- X[indx, ]
   x_rest <- X[-indx, ]
-  #y_rest <- apply(x_rest,1,Testmodel)
   
   # Evaluate model outputs and fit a Kriging model
-  if (Testmodel_ind >= 2){
-    y <- apply(Mapping(x,Range),1,Testmodel)      
-  } else {
-    y <- apply(x,1,Testmodel)
-  }
+  start.time<- Sys.time()
+  y <- apply(x,1,Testmodel)
+  end.time<- Sys.time()
+  model_time<- difftime(end.time,start.time,units = "secs")
+  T_model_AKMCS<- c(T_model_AKMCS,model_time)
   
   start.time<- Sys.time()
   GPmodel <- GP_fit(x, y)
@@ -98,11 +92,11 @@ for (k in 1:3){
       x_rest <- x_rest[-m, ]
       
       # Evaluate the output of that sample and update
-      if (Testmodel_ind >= 2){
-        y_add <- Testmodel(Mapping(t(as.matrix(x_add)),Range))      
-      } else {
-        y_add <- Testmodel(x_add)
-      }
+      start.time<- Sys.time()
+      y_add <- Testmodel(x_add)
+      end.time<- Sys.time()
+      model_time<- difftime(end.time,start.time,units = "secs")
+      T_model_AKMCS<- c(T_model_AKMCS,model_time)
       
       y <- append(y,y_add)
       x <- rbind(x,x_add)
@@ -130,6 +124,7 @@ for (k in 1:3){
       save(AKMCS_size,file = paste0(folder,"/AKMCS_size"))
       save(AKMCS_size_vec,file = paste0(folder,"/AKMCS_size_vec"))
       save(T_AKMCS,file = paste0(folder,"/T_AKMCS"))
+      save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
       save(T_pred_AKMCS,file = paste0(folder,"/T_pred_AKMCS"))
       save(x,file = paste0(folder,"/x"))
       save(a,file = paste0(folder,"/a"))
@@ -149,15 +144,12 @@ for (k in 1:3){
     # Next perform the sensitivity analysis
     N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
     Sobol_AKMCS_convergesize<- tot_size[m]
-    print(paste0("checking convergence of input ranking at a sample size of ",N))
+    print(paste0("checking convergence of input ranking at a sample size of ", tot_size[m]))
     
     # Time for sensitivity analysis
     start.time <- Sys.time()
     
     mat <- sobol_matrices(N = N, params = as.character(c(1:d)), order = "second")
-    if (Testmodel_ind>2){
-      mat <- Mapping(mat,Range)
-    }
     
     Y_S <- Kriging(mat)
     
@@ -213,4 +205,5 @@ for (k in 1:3){
       } 
     }
   }
+  
 }
