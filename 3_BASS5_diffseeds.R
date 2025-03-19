@@ -9,56 +9,80 @@ graphics.off()
 
 source("0_library.R")
 
-# Set a random seed
-set.seed(1)
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
 
-print("3_BASS.R")
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
 
-# Define the model in each dimension and apply BASS method
-for (k in 1:3){
+print("3_BASS5.R")
 
+#foreach executes the code within the brackets separately on each node
+foreach(node = 1:4)%dopar%{ 
+  
+  source("0_library.R")
+  
+  # Define the model in each dimension and apply BASS method
+  k=5
+  
+  seed<- node*k
+  set.seed(seed)
+  
+  T_LHS_BASS<- vector()
   T_BASS<- vector()
   T_pred_BASS<- vector()
   T_BASSSobol<- vector()
   T_check_BASS<- vector()
+  T_model_BASS<- vector()
   
   # Model dimension
   d=D[k]
   S_total <- rep(NA,d)
   
   # Folder for d dimension test scenario
-  folder <- paste(folderpath,d,"D/BASS",sep="")
-  if (Testmodel_ind==2){
-    folder <- paste(folderpath,"Hymod/BASS",sep="") 
-  }
-  if (Testmodel_ind==3){
-    folder <- paste(folderpath,"SacSma/BASS",sep="") 
-  }
-  if (!dir.exists(folder)){
-    dir.create(file.path(folder), showWarnings = FALSE)
-  }
+  folder<-paste0(folderpath,d,"D/BASS/seed",seed) #set folder depending on both d and node
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
   # Use 20,000 LHS training data points to test emulator quality
-  x_test <- randomLHS(20000,d)
-  if (Testmodel_ind >= 2){
-    x_test <- Mapping(x_test,Range)      
-  }
+  x_test <- randomLHS(2e4,d)
+  save(x_test,file = paste0(folder,"/x_test"))
+  
   BASS_size <- 10*d
   BASS_size_vec <- BASS_size
+  
   # Similar to Kriging method, we begin with 10 times model dimension samples
   
   while (1>0) {
-    X <- randomLHS(BASS_size, d)
-    if (Testmodel_ind >= 2){
-      X <- Mapping(X,Range)      
+    
+    if(length(BASS_size_vec)==1){
+      start.time<- Sys.time()
+      X_BASS <- randomLHS(BASS_size, d)
+      end.time<- Sys.time()
+      LHS_time <- difftime(end.time,start.time, units = "secs")
+      T_LHS_BASS<- c(T_LHS_BASS,LHS_time)
     }
-    Y <- apply(X, 1, Testmodel)
+    if(length(BASS_size_vec)>1){
+      start.time<- Sys.time()
+      X_BASS <- augmentLHS(X_BASS,d)
+      end.time<- Sys.time()
+      LHS_time <- difftime(end.time,start.time, units = "secs")
+      T_LHS_BASS<- c(T_LHS_BASS,LHS_time)
+    }
+    
+    start.time<- Sys.time()
+    Y <- apply(X_BASS, 1, Testmodel)
+    end.time <- Sys.time()
+    model_time <- difftime(end.time,start.time, units = "secs")
+    T_model_BASS<- c(T_model_BASS,model_time)
     
     # Use a MCMC size of 500,000, burn-in period of 100,000, record the output every 1,000 steps
-    mcmc_size <- 500000
+    mcmc_size <- 5e5
     # Record the time of BASS emulation
     start.time <- Sys.time()
-    mod <- bass(X, Y, nmcmc = mcmc_size, nburn = 100000, thin = 1000,verbose = FALSE) # fit BASS model
+    mod <- bass(X_BASS, Y, nmcmc = mcmc_size, nburn = 1e5, thin = 1e3,verbose = FALSE) # fit BASS model
     end.time <- Sys.time()
     fit_time <- difftime(end.time,start.time, units = "secs")
     T_BASS<- c(T_BASS,fit_time)
@@ -71,8 +95,17 @@ for (k in 1:3){
     
     std <- sqrt(apply(y, 2, var))
     mean <- colMeans(y)
-    print(paste("sample size = ",BASS_size,sep=""))
-    print(paste("max std = ",max(std), "thres value = ", ((max(mean)-min(mean))/20)^2,sep=""))
+    print(paste0("sample size = ",BASS_size))
+    print(paste0("max std = ",max(std), "thres value = ", ((max(mean)-min(mean))/20)^2))
+    
+    
+    save(X_BASS, file = paste0(folder, "/X_BASS"))
+    save(T_model_BASS, file = paste0(folder,"/T_model_BASS"))
+    save(T_LHS_BASS, file = paste0(folder, "/T_LHS_BASS"))
+    save(T_BASS, file = paste0(folder, "/T_BASS"))
+    save(T_pred_BASS, file = paste0(folder, "/T_pred_BASS"))
+    save(BASS_size,file = paste0(folder,"/BASS_size"))
+    save(BASS_size_vec,file = paste0(folder,"/BASS_size_vec"))
     
     # If still need to take more samples, add the sample size by d
     if (max(std) > ((max(mean)-min(mean))/20)){
@@ -99,15 +132,12 @@ for (k in 1:3){
       #     be stable. We add a convergence check here to make sure the results are reliable. If the results are 
       #     not converged, add the BASS sample size by d.
       
-      n_bootstrap<- 100
-      n_mcmc<- nrow(S_BASS$S)
-      Rho_all<- vector()
       # If converged, save the emulation time, sensitivity analysis time, sensitivity indices and the sample size
-      Sens <- S_BASS$T[seq(n_mcmc/n_bootstrap,n_mcmc,by=n_mcmc/n_bootstrap),c(1:length(Important_indices))]
+      Sens <- S_BASS$T[seq(4,400,by=4),c(1:length(Important_indices))]
       Rank <- t(apply(Sens, 1, rank))
-      for (boot_ind1 in 1:(n_bootstrap-1)){
+      for (boot_ind1 in 1:99){
         T <- boot_ind1
-        for (boot_ind2 in (T+1):nbootstrap){
+        for (boot_ind2 in (T+1):100){
           Rho <- rep(NA,length(Important_indices))
           Weights <- rep(NA,length(Important_indices))
           for (para_ind in 1:length(Important_indices)){
@@ -118,58 +148,31 @@ for (k in 1:3){
             Rho[para_ind] <- abs(Rank[boot_ind1,para_ind]-Rank[boot_ind2,para_ind])*
               Weights[para_ind]/Weights_sum
           }
-          Rho_all <- c(Rho_all,Rho)
+          if (boot_ind2 == 2){
+            Rho_all <- Rho
+          } else{
+            Rho_all <- append(Rho_all,Rho)
+          }
         }
       }
-      Rho_all_mat <- matrix(Rho_all, nrow = d)
-      Rho_all_sum <- apply(Rho_all_mat, 2, sum)
+      Rho_all <- matrix(Rho_all, nrow = d)
+      Rho_all <- apply(Rho_all, 2, sum)
       
       end.time <- Sys.time()
       time_check <- difftime(end.time,start.time,units = "secs")
       T_check_BASS<- c(T_check_BASS,time_check)
       
-      if (quantile(Rho_all_sum,probs = 0.95, na.rm = TRUE) < 1){
-        save(T_BASS, file = paste(folder, "/T_BASS", sep=""))
-        save(T_pred_BASS, file = paste(folder, "/T_pred_BASS", sep=""))
-        save(T_check_BASS, file = paste(folder, "/T_check_BASS", sep=""))
-        save(T_BASSSobol,file = paste(folder,"/T_BASSSobol",sep=""))
-        save(S_BASS,file = paste(folder,"/S_BASS",sep=""))
-        save(BASS_size,file = paste(folder,"/BASS_size",sep=""))
-        save(BASS_size_vec,file = paste(folder,"/BASS_size_vec",sep=""))
+      save(T_check_BASS, file = paste0(folder, "/T_check_BASS"))
+      save(T_BASSSobol,file = paste0(folder,"/T_BASSSobol"))
+      save(S_BASS,file = paste0(folder,"/S_BASS"))
+      
+      if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
         break
       } else{
         BASS_size <- BASS_size + d
         BASS_size_vec<- c(BASS_size_vec,BASS_size)
       }
+      
     }
   }
-}
-
-for(k in 1:3){
-  
-  d=D[k]
-  
-  folder <- paste(folderpath,d,"D/BASS",sep="")
-  if (Testmodel_ind==2){
-    folder <- paste(folderpath,"Hymod/BASS",sep="") 
-  }
-  if (Testmodel_ind==3){
-    folder <- paste(folderpath,"SacSma/BASS",sep="") 
-  }
-  
-  load(paste(folder, "/T_BASS", sep=""))
-  print(summary(T_BASS))
-  
-  load(paste(folder, "/T_pred_BASS", sep=""))
-  print(summary(T_pred_BASS))
-  
-  load(paste(folder, "/T_check_BASS", sep=""))
-  print(summary(T_check_BASS))
-  
-  load(paste(folder, "/T_BASSSobol", sep=""))
-  print(summary(T_BASSSobol))
-  
-  load(paste(folder, "/BASS_size_vec", sep=""))
-  print(summary(BASS_size_vec))
-  
 }

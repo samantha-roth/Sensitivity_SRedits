@@ -1,5 +1,3 @@
-
-
 # Remove all existing environment and plots
 rm(list = ls())
 graphics.off()
@@ -10,13 +8,28 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 # Load the required packages
 source("0_library.R")
 
-print("2_Kriging1-3.R")
+print("2_Kriging4.R")
 
-# Set a random seed
-set.seed(3)
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
 
-# Define the test model in each dimension, build the Kriging emulator and perform the Sobol analysis
-for(k in 1:3){
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
+
+#foreach executes the code within the brackets separately on each node
+foreach(node = 1:4)%dopar%{ 
+
+  source("0_library.R")
+  
+  # Define the test model in each dimension, build the Kriging emulator and perform the Sobol analysis
+  k=4
+  
+  seed<- node*k
+  set.seed(seed)
+  
   T_Kriging<- vector()
   T_pred_Kriging<- vector()
   T_KrigingSobol<- vector()
@@ -36,8 +49,7 @@ for(k in 1:3){
   x_test <- randomLHS(2e4,d)
   
   # Folder for d dimension test scenario
-  folder <- paste0(folderpath,d,"D/Kriging")
-  
+  folder<-paste0(folderpath,d,"D/Kriging/seed",seed) #set folder depending on both d and node
   if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
   save(x_test,file = paste0(folder,"/x_test"))
@@ -111,6 +123,7 @@ for(k in 1:3){
   
   T_KrigingSobol<- vector()
   T_check_Kriging<- vector()
+  
   # For each considered sample size, perform the Sobol analysis
   for (m in 1:length(tot_size)){
     
@@ -180,6 +193,5 @@ for(k in 1:3){
       } 
     }
   }
-  
 }
 

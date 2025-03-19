@@ -7,32 +7,43 @@
 # Remove all existing environment and plots
 rm(list = ls())
 graphics.off()
+
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+
 source("0_library.R")
 
-print("1_Sobol4_SR.R") 
+print("1_Sobol4_diffseeds.R") 
 
-T_Sobol<- vector()
-T_check_Sobol<- vector()
-all_eval_times<- vector()
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
 
-# Define the test model in each dimension and perform the Sobol analysis
-k=4
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
+
+#foreach executes the code within the brackets separately on each node
+foreach(node = 1:4)%dopar%{ 
+  
+  source("0_library.R")
+  
+  T_Sobol<- vector()
+  T_check_Sobol<- vector()
+  all_eval_times<- vector()
+  
+  # Define the test model in each dimension and perform the Sobol analysis
+  k=4
+  
+  seed<- node*k*10
+  set.seed(seed)
   
   # d dimensional model
-  set.seed(k)
   d <- D[k]
   
   # Folder for d dimension test scenario under the working directory
-  # "Data" is the folder that saves all the relevant parameters during the tests
-  folder <- paste0(folderpath,d,"D")
-  if (Testmodel_ind==2){
-    folder <- paste0(folderpath,"Hymod") }
-  if (Testmodel_ind==3){
-    folder <- paste0(folderpath,"SacSma") }
-  if (!dir.exists(folder)){
-    dir.create(folder)}
-  if (!dir.exists(paste0(folder,"/Sobol"))){
-    dir.create(paste0(folder,"/Sobol"))}
+  folder<-paste0(folderpath,d,"D/Sobol/seed",seed) #set folder depending on both d and node
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
   # For each considered sample size, perform the Sobol analysis
   for (m in 1:length(tot_size)){
@@ -75,6 +86,7 @@ k=4
       
       S <- sobol_indices_boot(Y=Y,N=N,params = as.character(c(1:d)),
                               boot=TRUE,R=100,order="second")
+      
       sens_end.time<-Sys.time()
       time_sobol<-difftime(sens_end.time,sens_start.time,units = "secs")
       T_Sobol<-c(T_Sobol,time_sobol)
@@ -111,21 +123,23 @@ k=4
       time_check <- difftime(end.time,start.time,units = "secs")
       T_check_Sobol<- c(T_check_Sobol,time_check)
       
-      
-      save(T_Sobol,file = paste0(folder,"/Sobol/T_Sobol"))
-      save(T_check_Sobol,file=paste0(folder,"/Sobol/T_check_Sobol"))
-      save(S,file=paste0(folder,"/Sobol/S_Sobol"))
+      save(T_Sobol,file = paste0(folder,"/T_Sobol"))
+      save(T_check_Sobol,file=paste0(folder,"/T_check_Sobol"))
+      save(S,file=paste0(folder,"/S_Sobol"))
       save(Sobol_convergesize,file=paste0(folder,"/Sobol_convergesize"))
       save(all_eval_times,file = paste0(folder,"/all_eval_times"))
       
       if (!any(is.na(Rho_all))){
         #print(quantile(Rho_all,probs = 0.95, na.rm = TRUE))
         if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
-          break
           avg_eval_time<- mean(all_eval_times)
           save(avg_eval_time,file = paste0(folder,"/avg_eval_time"))
+          break
         }
       }
       
     }
   }
+  
+
+}  

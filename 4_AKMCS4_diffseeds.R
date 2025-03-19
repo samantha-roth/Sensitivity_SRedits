@@ -1,4 +1,3 @@
-
 # Sobol based on the Adaptive Kriging combined with Monte Carlo Sampling (AKMCS) method
 # Note: This script also takes an extremely long time when dealing with high-dimensional
 #       models. Again change the dimension vector D for code replication check. 
@@ -9,12 +8,27 @@ graphics.off()
 
 source("0_library.R")
 
-print("4_AKMCS_SR.R")
+print("4_AKMCS4_diffseeds.R")
 
-set.seed(4)
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
 
-# Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
-for(k in 1:3){
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
+
+#foreach executes the code within the brackets separately on each node
+foreach(node = 1:4)%dopar%{ 
+  
+  source("0_library.R")
+  
+  # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
+  k=4
+  
+  seed<- node*k
+  set.seed(seed)
   
   T_AKMCS<- vector()
   T_pred_AKMCS<- vector()
@@ -25,17 +39,14 @@ for(k in 1:3){
   # model dimension
   d <- D[k]
   
-  folder<-paste0(folderpath,d,"D/AKMCS")
+  folder<-paste0(folderpath,d,"D/AKMCS/seed",seed) #set folder depending on both d and node
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
-  if (!dir.exists(folder)){
-    dir.create(folder, recursive = TRUE)
-  }
   
   # Start recording the time from AKMCS initial state
   # AKMCS also begins with 20,000 training samples
   start.time <- Sys.time()
   
-  set.seed(4)
   candidate_size <- 20000
   X <- randomLHS(candidate_size,d)
   
@@ -207,3 +218,4 @@ for(k in 1:3){
   }
   
 }
+

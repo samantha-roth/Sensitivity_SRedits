@@ -30,7 +30,6 @@ S_total <- rep(NA,d)
 
 # Folder for d dimension test scenario
 folder <- paste0(folderpath,d,"D/BASS")
-
 if (!dir.exists(folder)) dir.create(file.path(folder), showWarnings = FALSE)
 
 # Use 20,000 LHS training data points to test emulator quality
@@ -83,7 +82,7 @@ while (1>0) {
   std <- sqrt(apply(y, 2, var))
   mean <- colMeans(y)
   print(paste0("sample size = ",BASS_size))
-  print(paste0("max std = ",max(std), "thres value = ", ((max(mean)-min(mean))/20)^2))
+  print(paste0("max std = ",max(std), ", thres value = ", (max(mean)-min(mean))/20))
   
   
   save(X_BASS, file = paste0(folder, "/X_BASS"))
