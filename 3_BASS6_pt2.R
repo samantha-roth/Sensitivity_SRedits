@@ -32,6 +32,8 @@ load(paste0(folder, "/T_pred_BASS"))
 load(paste0(folder, "/BASS_size_vec"))
 load(paste0(folder, "/BASS_size"))
 
+T_BASSSobol<- vector()
+T_check_BASS<- vector()
 # Use 20,000 LHS training data points to test emulator quality
 load(paste0(folder,"/x_test"))
 
