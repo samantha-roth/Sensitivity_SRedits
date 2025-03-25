@@ -51,9 +51,15 @@ for (i in 1:(length(D))) {
   
   # Calculation of the computational time in each scenario
   # Sensitivity analysis time + model evaluation adjusted time + emulation time
+  # Calculation of the computational time in each scenario
+  # Sensitivity analysis time + model evaluation adjusted time + emulation time
   for (j in 1:length(tested_eval_time)) {
-    Time_Sobol[i,j] <- sum(T_Sobol)- sum(all_eval_times) + sum(T_check_Sobol) + tested_eval_time[j]*Sobol_convergesize
-    Time_BASS[i,j] <- sum(T_BASS)+ sum(T_pred_BASS) + tested_eval_time[j]*BASS_size + sum(T_BASSSobol) + sum(T_check_BASS)
+    tot_Sobol_eval_time<-0 
+    for(m in 1:length(all_sizes)){
+      tot_Sobol_eval_time<- tot_Sobol_eval_time + tested_eval_time[j]*all_sizes[m]
+    }
+    Time_Sobol[i,j] <- sum(T_Sobol)- length(T_Sobol)*avg_eval_time + sum(T_check_Sobol) + tot_Sobol_eval_time
+    Time_BASS[i,j] <- sum(T_LHS_BASS) + sum(T_BASS)+ sum(T_pred_BASS) + tested_eval_time[j]*BASS_size + sum(T_BASSSobol) + sum(T_check_BASS)
   }
 }
 
