@@ -5,7 +5,6 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 
 # Load the required functions and packages
 source("sobol_indices_boot.R")
-#source("sib_simplified.R")
 library(GPfit)
 library(lhs)
 library(BASS)
@@ -22,7 +21,7 @@ tot_size <- c(seq(100,1000,by=100),seq(1250,5e3,by=250),seq(6e3,5e4,by=1e3), #or
 folderpath <- "./Ranking_Data/"
 
 # Choose the test model, the number can only be 1 (G function), 2 (Hymod) or 3 (Sacsma)
-Testmodel_ind <- 1 
+Testmodel_ind <- 2
 
 if (Testmodel_ind == 1){ # G function
   Testmodel<-function (X) {

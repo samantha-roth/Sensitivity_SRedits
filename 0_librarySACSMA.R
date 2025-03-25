@@ -5,7 +5,6 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 
 # Load the required functions and packages
 source("sobol_indices_boot.R")
-#source("sib_simplified.R")
 library(GPfit)
 library(lhs)
 library(BASS)
@@ -22,7 +21,7 @@ tot_size <- c(seq(100,1000,by=100),seq(1250,5e3,by=250),seq(6e3,5e4,by=1e3), #or
 folderpath <- "./Ranking_Data/"
 
 # Choose the test model, the number can only be 1 (G function), 2 (Hymod) or 3 (Sacsma)
-Testmodel_ind <- 1 
+Testmodel_ind <- 3
 
 if (Testmodel_ind == 1){ # G function
   Testmodel<-function (X) {
@@ -67,7 +66,7 @@ if (Testmodel_ind == 3){ # SacSma
   source("sacSma.R")
   load("SacSma_dataframe")
   Testmodel <- sacSma
-  D <- 16
+  D <- d<- 13
   
   ## Precipitation [mm/day]
   precipit<-SacSma_dataframe$precipit
@@ -81,8 +80,9 @@ if (Testmodel_ind == 3){ # SacSma
   Range <- matrix(data = c(5,300,5,150,10,700,100,1200,
                            5,500,0.1,0.75,0.001,0.05,0.01,0.6,
                            5,350,1,5,0,0.9,0,0.1,
-                           0,0.4,0.3,0.3,0,0,0,0),nrow = 2,ncol = 16,byrow = FALSE)
+                           0,0.4),nrow = 2,ncol = d,byrow = FALSE)
   known_pars<- c(0.3,0,0)
+  
 }
 
 # A function that maps [0,1] to any input range
