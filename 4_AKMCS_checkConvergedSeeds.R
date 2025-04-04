@@ -22,5 +22,5 @@ for(k in 1:6){
     try(load(paste0(folder,"/Sobol_AKMCS_convergesize")))
   }
 }
-#none of them have converged for k=6
+#none of them have converged for k=6, even after a pt2
 #seed 15 hasn't converged for k=5

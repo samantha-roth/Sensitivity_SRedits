@@ -8,12 +8,12 @@ graphics.off()
 
 source("0_library.R")
 
-print("4_AKMCS4_SR.R")
+print("4_AKMCS6_SR.R")
 
-set.seed(17)
+set.seed(4)
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
-k=4
+k=6
 
 T_AKMCS<- vector()
 T_pred_AKMCS<- vector()
@@ -25,12 +25,13 @@ T_model_AKMCS<- vector()
 d <- D[k]
 
 folder<-paste0(folderpath,d,"D/AKMCS")
-if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
+if (!dir.exists(folder))dir.create(folder, recursive = TRUE)
 
 # Start recording the time from AKMCS initial state
 # AKMCS also begins with 20,000 training samples
 start.time <- Sys.time()
 
+set.seed(4)
 candidate_size <- 20000
 X <- randomLHS(candidate_size,d)
 
@@ -124,14 +125,11 @@ if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
 
 
     # End the loop if the stopping criterion is fulfilled
-    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20){
-      break
-    }
+    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20) break
   }
 }
 
-#set.seed(17)
-
+#set.seed(4)
 #load(paste0(folder,"/AKMCS_size"))
 #load(paste0(folder,"/AKMCS_size_vec"))
 #load(paste0(folder,"/T_AKMCS"))
@@ -148,10 +146,10 @@ T_check_AKMCS<- vector()
 
 for (m in 1:length(tot_size)){
   
-  # Next perform the sensitivity analysis
-  N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
-  
   if(N>=2){
+    # Next perform the sensitivity analysis
+    N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
+    
     # Time for sensitivity analysis
     start.time <- Sys.time()
     
@@ -207,9 +205,11 @@ for (m in 1:length(tot_size)){
     save(S_AKMCS,file=paste0(folder,"/S_AKMCS"))
     save(Sobol_AKMCS_convergesize,file=paste0(folder,"/Sobol_AKMCS_convergesize"))
     
-    print(paste0("95% ",quantile(Rho_all,probs = 0.95, na.rm = TRUE)))
+    print(paste0("95%: ",quantile(Rho_all,probs = 0.95, na.rm = TRUE)))
+    
     if (!any(is.na(Rho_all))){
       if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1) break
     }
   }
+  
 }

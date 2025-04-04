@@ -6,76 +6,66 @@
 rm(list = ls())
 graphics.off()
 
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+
 source("0_library.R")
 
-print("4_AKMCS4_SR.R")
-
-set.seed(17)
+print("4_AKMCS6_SR_pt2.R")
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
-k=4
 
-T_AKMCS<- vector()
-T_pred_AKMCS<- vector()
-T_AKMCSSobol<- vector()
-T_check_AKMCS<- vector()
-T_model_AKMCS<- vector()
-
+k=6
 # model dimension
 d <- D[k]
 
+set.seed(4)
+
 folder<-paste0(folderpath,d,"D/AKMCS")
-if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
+
+if (!dir.exists(folder)){
+  dir.create(folder, recursive = TRUE)
+}
 
 # Start recording the time from AKMCS initial state
 # AKMCS also begins with 20,000 training samples
 start.time <- Sys.time()
-
 candidate_size <- 20000
-X <- randomLHS(candidate_size,d)
 
 # Save these training samples
-save(X,file = paste0(folder,"/initial_sample"))
+load(paste0(folder,"/initial_sample"))
 
-# Begin with 12 random samples from these training samples
-n_init <- 10 + d
-indx <- sample(candidate_size,n_init)
-AKMCS_size_vec<- n_init
-AKMCS_size<- n_init
+load(paste0(folder,"/T_AKMCS"))
+load(paste0(folder,"/T_model_AKMCS"))
+load(paste0(folder,"/T_pred_AKMCS"))
+load(paste0(folder,"/x"))
+load(paste0(folder,"/AKMCS_size"))
+load(paste0(folder,"/AKMCS_size_vec"))
+load(paste0(folder,"/initial_sample"))
+load(paste0(folder,"/a"))
 
-# Update the used samples and remaining samples
-x <- X[indx, ]
-x_rest <- X[-indx, ]
+rows_used<- vector()
+for(i in 1:nrow(x)){
+  match_rows <- which(apply(X, 1, function(y) all(y == x[i,])))
+  rows_used<- c(rows_used,match_rows)
+}
+if(nrow(x)!=length(rows_used)) print("do not proceed")
+all_rows<- 1:2e4
+rows_rest<- all_rows[-rows_used]
 
-# Evaluate model outputs and fit a Kriging model
-start.time<- Sys.time()
+# Update the remaining samples
+x_rest <- X[rows_rest, ]
+
 y <- apply(x,1,Testmodel)
-end.time<- Sys.time()
-model_time<- difftime(end.time,start.time,units = "secs")
-T_model_AKMCS<- c(T_model_AKMCS,model_time)
-
-start.time<- Sys.time()
-GPmodel <- GP_fit(x, y)
-end.time<- Sys.time()
-fit_time<- difftime(end.time,start.time,units = "secs")
-T_AKMCS<- c(T_AKMCS,fit_time)
-
-start.time<- Sys.time()
-a <- predict(GPmodel,x_rest)
-end.time<- Sys.time()
-pred_time<- difftime(end.time,start.time,units = "secs")
-T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
 
 # U is the learning function, which is simply the standard error here
 U <- sqrt(a$MSE)
-print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+print(paste0("sample size =",dim(x)[1], ", max(U) =",max(U),", range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
 
 # End the loop if the stopping criterion is fulfilled
 # Stopping criterion: all the remaining samples have standard errors larger than 1
 # If the criterion is not reached, pick the next sample adaptively based on the learning function
 if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
   while (1>0){
-    
     # Find which sample has the largest standard error
     m <- which(U==max(U))
     if (length(m)>1) m <- sample(m,1)
@@ -83,6 +73,7 @@ if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
     # Add that sample and update the remaining samples
     x_add <- x_rest[m, ]
     x_rest <- x_rest[-m, ]
+    rows_rest<- rows_rest[-m]
     
     # Evaluate the output of that sample and update
     start.time<- Sys.time()
@@ -109,7 +100,7 @@ if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
     
     # Get the learning function again
     U <- sqrt(a$MSE)
-    print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+    print(paste0("sample size =",dim(x)[1],", max(U) =",max(U),", range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
     
     AKMCS_size<- AKMCS_size+1
     AKMCS_size_vec<- c(AKMCS_size_vec,AKMCS_size)
@@ -117,31 +108,17 @@ if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
     save(AKMCS_size,file = paste0(folder,"/AKMCS_size"))
     save(AKMCS_size_vec,file = paste0(folder,"/AKMCS_size_vec"))
     save(T_AKMCS,file = paste0(folder,"/T_AKMCS"))
-    save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
     save(T_pred_AKMCS,file = paste0(folder,"/T_pred_AKMCS"))
     save(x,file = paste0(folder,"/x"))
     save(a,file = paste0(folder,"/a"))
-
-
+    save(rows_rest, file= paste0(folder,"/rows_rest"))
+    save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
+    
     # End the loop if the stopping criterion is fulfilled
-    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20){
-      break
-    }
+    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20) break
   }
 }
 
-#set.seed(17)
-
-#load(paste0(folder,"/AKMCS_size"))
-#load(paste0(folder,"/AKMCS_size_vec"))
-#load(paste0(folder,"/T_AKMCS"))
-#load(paste0(folder,"/T_model_AKMCS"))
-#load(paste0(folder,"/T_pred_AKMCS"))
-#load(paste0(folder,"/x"))
-
-#y <- apply(x,1,Testmodel)
-
-#GPmodel <- GP_fit(x,y)
 
 T_AKMCSSobol<- vector()
 T_check_AKMCS<- vector()
@@ -152,6 +129,7 @@ for (m in 1:length(tot_size)){
   N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
   
   if(N>=2){
+    
     # Time for sensitivity analysis
     start.time <- Sys.time()
     
@@ -207,9 +185,11 @@ for (m in 1:length(tot_size)){
     save(S_AKMCS,file=paste0(folder,"/S_AKMCS"))
     save(Sobol_AKMCS_convergesize,file=paste0(folder,"/Sobol_AKMCS_convergesize"))
     
-    print(paste0("95% ",quantile(Rho_all,probs = 0.95, na.rm = TRUE)))
+    print(paste0("95%: ",quantile(Rho_all,probs = 0.95, na.rm = TRUE)))
+    
     if (!any(is.na(Rho_all))){
       if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1) break
     }
   }
+  
 }
