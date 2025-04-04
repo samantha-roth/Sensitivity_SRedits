@@ -10,8 +10,6 @@ source("0_library.R")
 
 print("4_AKMCS5_SR.R")
 
-set.seed(4)
-
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
 k=5
 
@@ -25,10 +23,7 @@ T_model_AKMCS<- vector()
 d <- D[k]
 
 folder<-paste0(folderpath,d,"D/AKMCS")
-
-if (!dir.exists(folder)){
-  dir.create(folder, recursive = TRUE)
-}
+if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
 
 # Start recording the time from AKMCS initial state
 # AKMCS also begins with 20,000 training samples

@@ -10,7 +10,7 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 
 source("0_library.R")
 
-print("4_AKMCS6_SR_pt2.R")
+print("4_AKMCS6_SR_pt3.R")
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
 

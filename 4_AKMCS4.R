@@ -25,129 +25,123 @@ T_model_AKMCS<- vector()
 d <- D[k]
 
 folder<-paste0(folderpath,d,"D/AKMCS")
-
-if (!dir.exists(folder)){
-  dir.create(folder, recursive = TRUE)
-}
+if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
 
 # Start recording the time from AKMCS initial state
 # AKMCS also begins with 20,000 training samples
-#start.time <- Sys.time()
+start.time <- Sys.time()
 
-#set.seed(4)
-#candidate_size <- 20000
-#X <- randomLHS(candidate_size,d)
+candidate_size <- 20000
+X <- randomLHS(candidate_size,d)
 
-## Save these training samples
-#save(X,file = paste0(folder,"/initial_sample"))
+# Save these training samples
+save(X,file = paste0(folder,"/initial_sample"))
 
-## Begin with 12 random samples from these training samples
-#n_init <- 10 + d
-#indx <- sample(candidate_size,n_init)
-#AKMCS_size_vec<- n_init
-#AKMCS_size<- n_init
+# Begin with 12 random samples from these training samples
+n_init <- 10 + d
+indx <- sample(candidate_size,n_init)
+AKMCS_size_vec<- n_init
+AKMCS_size<- n_init
 
-## Update the used samples and remaining samples
-#x <- X[indx, ]
-#x_rest <- X[-indx, ]
+# Update the used samples and remaining samples
+x <- X[indx, ]
+x_rest <- X[-indx, ]
 
-## Evaluate model outputs and fit a Kriging model
-#start.time<- Sys.time()
-#y <- apply(x,1,Testmodel)
-#end.time<- Sys.time()
-#model_time<- difftime(end.time,start.time,units = "secs")
-#T_model_AKMCS<- c(T_model_AKMCS,model_time)
-
-#start.time<- Sys.time()
-#GPmodel <- GP_fit(x, y)
-#end.time<- Sys.time()
-#fit_time<- difftime(end.time,start.time,units = "secs")
-#T_AKMCS<- c(T_AKMCS,fit_time)
-
-#start.time<- Sys.time()
-#a <- predict(GPmodel,x_rest)
-#end.time<- Sys.time()
-#pred_time<- difftime(end.time,start.time,units = "secs")
-#T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
-
-## U is the learning function, which is simply the standard error here
-#U <- sqrt(a$MSE)
-#print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
-
-## End the loop if the stopping criterion is fulfilled
-## Stopping criterion: all the remaining samples have standard errors larger than 1
-## If the criterion is not reached, pick the next sample adaptively based on the learning function
-#if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
-#  while (1>0){
-#    
-#    # Find which sample has the largest standard error
-#    m <- which(U==max(U))
-#    if (length(m)>1){
-#      m <- sample(m,1)
-#    }
-#    
-#    # Add that sample and update the remaining samples
-#    x_add <- x_rest[m, ]
-#    x_rest <- x_rest[-m, ]
-#    
-#    # Evaluate the output of that sample and update
-#    start.time<- Sys.time()
-#    y_add <- Testmodel(x_add)
-#    end.time<- Sys.time()
-#    model_time<- difftime(end.time,start.time,units = "secs")
-#    T_model_AKMCS<- c(T_model_AKMCS,model_time)
-#    
-#    y <- append(y,y_add)
-#    x <- rbind(x,x_add)
-#    
-#    # Fit the Kriging model again
-#    start.time<- Sys.time()
-#    GPmodel <- GP_fit(x, y)
-#    end.time <- Sys.time()
-#    fit_time <- difftime(end.time,start.time, units = "secs")
-#    T_AKMCS<- c(T_AKMCS,fit_time)
-#    
-#    start.time<- Sys.time()
-#    a <- predict(GPmodel,x_rest)
-#    end.time <- Sys.time()
-#    pred_time <- difftime(end.time,start.time, units = "secs")
-#    T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
-#    
-#    # Get the learning function again
-#    U <- sqrt(a$MSE)
-#    print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
-#    
-#    AKMCS_size<- AKMCS_size+1
-#    AKMCS_size_vec<- c(AKMCS_size_vec,AKMCS_size)
-#    
-#    save(AKMCS_size,file = paste0(folder,"/AKMCS_size"))
-#    save(AKMCS_size_vec,file = paste0(folder,"/AKMCS_size_vec"))
-#    save(T_AKMCS,file = paste0(folder,"/T_AKMCS"))
-#    save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
-#    save(T_pred_AKMCS,file = paste0(folder,"/T_pred_AKMCS"))
-#    save(x,file = paste0(folder,"/x"))
-#    save(a,file = paste0(folder,"/a"))
-
-
-#    # End the loop if the stopping criterion is fulfilled
-#    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20){
-#      break
-#    }
-#  }
-#}
-
-set.seed(4)
-
-load(paste0(folder,"/AKMCS_size"))
-load(paste0(folder,"/AKMCS_size_vec"))
-load(paste0(folder,"/T_AKMCS"))
-load(paste0(folder,"/T_model_AKMCS"))
-load(paste0(folder,"/T_pred_AKMCS"))
-load(paste0(folder,"/x"))
-
+# Evaluate model outputs and fit a Kriging model
+start.time<- Sys.time()
 y <- apply(x,1,Testmodel)
+end.time<- Sys.time()
+model_time<- difftime(end.time,start.time,units = "secs")
+T_model_AKMCS<- c(T_model_AKMCS,model_time)
 
-GPmodel <- GP_fit(x,y)
+start.time<- Sys.time()
+GPmodel <- GP_fit(x, y)
+end.time<- Sys.time()
+fit_time<- difftime(end.time,start.time,units = "secs")
+T_AKMCS<- c(T_AKMCS,fit_time)
+
+start.time<- Sys.time()
+a <- predict(GPmodel,x_rest)
+end.time<- Sys.time()
+pred_time<- difftime(end.time,start.time,units = "secs")
+T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
+
+# U is the learning function, which is simply the standard error here
+U <- sqrt(a$MSE)
+print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+
+# End the loop if the stopping criterion is fulfilled
+# Stopping criterion: all the remaining samples have standard errors larger than 1
+# If the criterion is not reached, pick the next sample adaptively based on the learning function
+if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
+  while (1>0){
+    
+    # Find which sample has the largest standard error
+    m <- which(U==max(U))
+    if (length(m)>1) m <- sample(m,1)
+    
+    # Add that sample and update the remaining samples
+    x_add <- x_rest[m, ]
+    x_rest <- x_rest[-m, ]
+    
+    # Evaluate the output of that sample and update
+    start.time<- Sys.time()
+    y_add <- Testmodel(x_add)
+    end.time<- Sys.time()
+    model_time<- difftime(end.time,start.time,units = "secs")
+    T_model_AKMCS<- c(T_model_AKMCS,model_time)
+    
+    y <- append(y,y_add)
+    x <- rbind(x,x_add)
+    
+    # Fit the Kriging model again
+    start.time<- Sys.time()
+    GPmodel <- GP_fit(x, y)
+    end.time <- Sys.time()
+    fit_time <- difftime(end.time,start.time, units = "secs")
+    T_AKMCS<- c(T_AKMCS,fit_time)
+    
+    start.time<- Sys.time()
+    a <- predict(GPmodel,x_rest)
+    end.time <- Sys.time()
+    pred_time <- difftime(end.time,start.time, units = "secs")
+    T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
+    
+    # Get the learning function again
+    U <- sqrt(a$MSE)
+    print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+    
+    AKMCS_size<- AKMCS_size+1
+    AKMCS_size_vec<- c(AKMCS_size_vec,AKMCS_size)
+    
+    save(AKMCS_size,file = paste0(folder,"/AKMCS_size"))
+    save(AKMCS_size_vec,file = paste0(folder,"/AKMCS_size_vec"))
+    save(T_AKMCS,file = paste0(folder,"/T_AKMCS"))
+    save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
+    save(T_pred_AKMCS,file = paste0(folder,"/T_pred_AKMCS"))
+    save(x,file = paste0(folder,"/x"))
+    save(a,file = paste0(folder,"/a"))
+
+
+    # End the loop if the stopping criterion is fulfilled
+    if (max(U)<(max(a$Y_hat)-min(a$Y_hat))/20){
+      break
+    }
+  }
+}
+
+#set.seed(17)
+
+#load(paste0(folder,"/AKMCS_size"))
+#load(paste0(folder,"/AKMCS_size_vec"))
+#load(paste0(folder,"/T_AKMCS"))
+#load(paste0(folder,"/T_model_AKMCS"))
+#load(paste0(folder,"/T_pred_AKMCS"))
+#load(paste0(folder,"/x"))
+
+#y <- apply(x,1,Testmodel)
+
+#GPmodel <- GP_fit(x,y)
 
 T_AKMCSSobol<- vector()
 T_check_AKMCS<- vector()
