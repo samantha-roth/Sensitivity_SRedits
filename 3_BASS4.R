@@ -29,7 +29,6 @@ k=4
   
   # Folder for d dimension test scenario
   folder <- paste0(folderpath,d,"D/BASS")
-
   if (!dir.exists(folder)) dir.create(file.path(folder), showWarnings = FALSE)
   
   # Use 20,000 LHS training data points to test emulator quality
