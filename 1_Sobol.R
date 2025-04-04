@@ -8,7 +8,7 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+setwd("/Users/jeremywang/Documents/GitHub/Sensitivity_SRedits_Final")
 
 source("0_library.R")
 
@@ -28,9 +28,12 @@ for(k in 1:3){
   # Folder for d dimension test scenario under the working directory
   # "Data" is the folder that saves all the relevant parameters during the tests
   folder <- paste0(folderpath,d,"D")
-  if (!dir.exists(folder)) dir.create(folder)
+  # adding if statement for saving the polynomial function results
+  if (Testmodel_ind == 0) {
+    folder <- paste(folderpath,"Polynomial/",d,"D",sep="")}
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE, showWarnings = TRUE)
   folder <- paste0(folder,"/Sobol")
-  if (!dir.exists(folder)) dir.create(folder)
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE, showWarnings = TRUE)
   
   # For each considered sample size, perform the Sobol analysis
   for (m in 1:length(tot_size)){
