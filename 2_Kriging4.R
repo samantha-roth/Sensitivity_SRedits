@@ -107,19 +107,19 @@ k=4
       }
     }
 
-  set.seed(3)
-  load(paste0(folder,"/a"))
-  load(paste0(folder,"/X_GP"))
-  load(paste0(folder,"/T_model_Kriging"))
-  load(paste0(folder,"/T_LHS_Kriging"))
-  load(paste0(folder,"/T_Kriging"))
-  load(paste0(folder,"/T_pred_Kriging"))
-  load(paste0(folder,"/Kriging_size"))
-  load(paste0(folder,"/Kriging_size_vec"))
+  #set.seed(3)
+  #load(paste0(folder,"/a"))
+  #load(paste0(folder,"/X_GP"))
+  #load(paste0(folder,"/T_model_Kriging"))
+  #load(paste0(folder,"/T_LHS_Kriging"))
+  #load(paste0(folder,"/T_Kriging"))
+  #load(paste0(folder,"/T_pred_Kriging"))
+  #load(paste0(folder,"/Kriging_size"))
+  #load(paste0(folder,"/Kriging_size_vec"))
   
-  Y_GP <- apply(X_GP,1,Testmodel)
+  #Y_GP <- apply(X_GP,1,Testmodel)
 
-  GPmodel <- GP_fit(X_GP,Y_GP)
+  #GPmodel <- GP_fit(X_GP,Y_GP)
   
   T_KrigingSobol<- vector()
   T_check_Kriging<- vector()

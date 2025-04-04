@@ -4,6 +4,8 @@
 rm(list = ls())
 graphics.off()
 
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+
 source("0_library.R")
 
 for(k in 1:6){
@@ -22,4 +24,4 @@ for(k in 1:6){
   }
 }
 #all of them have converged for k<=5
-#none have converged for k=6
+#only seed 24 converged for k=6 after part 2

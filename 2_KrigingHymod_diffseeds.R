@@ -51,7 +51,7 @@ foreach(node = 1:4)%dopar%{
   #x_test <- Mapping(x_test,Range)
   # Folder for d dimension test scenario
   
-  folder<-paste0(folderpath,d,"D/Kriging/seed",seed) #set folder depending on both d and node
+  folder<-paste0(folderpath,"Hymod/Kriging/seed",seed) #set folder depending on both d and node
   if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
   save(x_test,file = paste(folder,"/x_test",sep=""))
