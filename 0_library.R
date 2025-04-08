@@ -25,6 +25,8 @@ folderpath <- "./Ranking_Data/"
 # Choose the test model, the number can only be 1 (G function), 2 (Hymod) or 3 (Sacsma)
 Testmodel_ind <- 0
 
+# Test comment
+
 if (Testmodel_ind == 0) {# polynomial function
   Testmodel<-function (X) {
     S = 0
