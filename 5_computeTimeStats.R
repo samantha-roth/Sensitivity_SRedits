@@ -61,6 +61,10 @@ for(node in 2:n_nodes){
   Time_AKMCS_arr[,,node]<- Time_AKMCS
 }
 
+save(Time_Sobol_arr,file=paste0("./Ranking_Data/Time_Sobol_arr"))
+save(Time_BASS_arr,file=paste0("./Ranking_Data/Time_BASS_arr"))
+save(Time_Kriging_arr,file=paste0("./Ranking_Data/Time_Kriging_arr"))
+save(Time_AKMCS_arr,file=paste0("./Ranking_Data/Time_AKMCS_arr"))
 
 Mean_Time_BASS<- Time_BASS
 Var_Time_BASS<- Time_BASS

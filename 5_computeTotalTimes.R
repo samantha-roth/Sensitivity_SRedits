@@ -29,7 +29,7 @@ Time_AKMCS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
 Time_BASS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
 
 # Load all related results for each test scenario
-for (i in 1:(length(D)-1)) {
+for (i in 1:(length(D))) {
   folder <- paste0("./Ranking_Data/",tested_D[i])
   
   # Sobol:
@@ -118,7 +118,7 @@ for(node in 1:n_nodes){
   Time_BASS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
   
   # Load all related results for each test scenario
-  for (i in 1:(length(D)-1)) {
+  for (i in 1:(length(D))) {
     
     print(paste0("node= ",node))
     

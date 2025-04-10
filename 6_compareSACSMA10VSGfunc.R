@@ -21,10 +21,10 @@ tested_eval_time <- c(0.001,0.01,0.1,1,10,60,600,3600,3600*10)
 eval_time_lab <- c("1ms","10ms","0.1s","1s","10s","1min","10min","1h","10h")
 
 #load results for Hymod
-load(paste0("./Ranking_Data/SacSma10Summary_Time_Sobol"))
-load(paste0("./Ranking_Data/SacSma10Summary_Time_BASS"))
-load(paste0("./Ranking_Data/SacSma10Summary_Time_Kriging"))
-load(paste0("./Ranking_Data/SacSma10Summary_Time_AKMCS"))
+load(paste0("./Ranking_Data/SacSma10/Summary_Time_Sobol"))
+load(paste0("./Ranking_Data/SacSma10/Summary_Time_BASS"))
+load(paste0("./Ranking_Data/SacSma10/Summary_Time_Kriging"))
+load(paste0("./Ranking_Data/SacSma10/Summary_Time_AKMCS"))
 
 Mean_Time_Sobol_SACSMA10<- c(Mean_Time_Sobol)
 Mean_Time_BASS_SACSMA10<- c(Mean_Time_BASS)
@@ -119,7 +119,6 @@ for(i in 1:length(Mean_Time_Sobol_SACSMA10)){
 order_methods_G
 
 order_methods_SACSMA10
-
 
 ################################################################################
 #G function
