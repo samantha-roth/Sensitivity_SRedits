@@ -7,7 +7,7 @@
 rm(list = ls())
 graphics.off()
 
-source("0_library.R")
+source("0_libraryPoly.R")
 
 # Set a random seed
 set.seed(33)
@@ -30,6 +30,8 @@ for(k in 1:3){
   
   # Folder for d dimension test scenario
   folder <- paste0(folderpath,d,"D/BASS")
+  if (Testmodel_ind == 0) {
+    folder <- paste(folderpath,"Polynomial/",d,"D/BASS",sep="")}
   
   if (!dir.exists(folder)) dir.create(file.path(folder), showWarnings = FALSE)
   

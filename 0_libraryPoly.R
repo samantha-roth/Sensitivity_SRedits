@@ -23,7 +23,7 @@ tot_size <- c(seq(100,1000,by=100),seq(1250,5e3,by=250),seq(6e3,5e4,by=1e3), #or
 folderpath <- "./Ranking_Data/"
 
 # Choose the test model, the number can only be 1 (G function), 2 (Hymod) or 3 (Sacsma)
-Testmodel_ind <- 0
+Testmodel_ind <- 1
 
 # Test comment
 

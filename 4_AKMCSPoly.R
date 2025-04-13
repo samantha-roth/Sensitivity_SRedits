@@ -7,7 +7,7 @@
 rm(list = ls())
 graphics.off()
 
-source("0_library.R")
+source("0_libraryPoly.R")
 
 print("4_AKMCS1-3_SR.R")
 
@@ -26,8 +26,10 @@ for(k in 1:3){
   d <- D[k]
   
   folder<-paste0(folderpath,d,"D/AKMCS")
+  if (Testmodel_ind == 0) {
+    folder <- paste(folderpath,"Polynomial/",d,"D/AKMCS",sep="")}
   
-  #if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
+  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
   
   # Start recording the time from AKMCS initial state
   # AKMCS also begins with 20,000 training samples
@@ -214,7 +216,7 @@ for(k in 1:3){
       save(Sobol_AKMCS_convergesize,file=paste0(folder,"/Sobol_AKMCS_convergesize"))
       
       if (!any(is.na(Rho_all))){
-        #print(quantile(Rho_all,probs = 0.95, na.rm = TRUE))
+        print(quantile(Rho_all,probs = 0.95, na.rm = TRUE))
         if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1) break
       }
     }
