@@ -34,7 +34,6 @@ if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
 # AKMCS also begins with 20,000 training samples
 start.time <- Sys.time()
 
-set.seed(4)
 candidate_size <- 20000
 X <- randomLHS(candidate_size,d)
 
@@ -136,7 +135,7 @@ if (max(U)>(max(a$Y_hat)-min(a$Y_hat))/20){
   }
 }
 
-set.seed(4)
+set.seed(17)
 
 # load(paste0(folder,"/AKMCS_size"))
 # load(paste0(folder,"/AKMCS_size_vec"))
