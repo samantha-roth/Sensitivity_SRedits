@@ -6,28 +6,28 @@
 rm(list = ls())
 graphics.off()
 
-source("0_library.R")
+source("0_libraryPoly.R")
 
 print("4_AKMCS4_diffseeds.R")
 
-#necessary packages for parallelization
-library("foreach")
-library("doParallel")
-
-#setup parallel backend to use many processors
-cores=detectCores()
-cl <- makeCluster(cores[1]-1) # -1 not to overload system
-registerDoParallel(cl)
-
-#foreach executes the code within the brackets separately on each node
-foreach(node = 1:4)%dopar%{ 
+# #necessary packages for parallelization
+# library("foreach")
+# library("doParallel")
+# 
+# #setup parallel backend to use many processors
+# cores=detectCores()
+# cl <- makeCluster(cores[1]-1) # -1 not to overload system
+# registerDoParallel(cl)
+# 
+# #foreach executes the code within the brackets separately on each node
+# foreach(node = 1:4)%dopar%{ 
   
-  source("0_library.R")
+  source("0_libraryPoly.R")
   
   # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
   k=4
   
-  seed<- node*k
+  seed<- 5
   set.seed(seed)
   
   T_AKMCS<- vector()
@@ -154,68 +154,71 @@ foreach(node = 1:4)%dopar%{
     
     # Next perform the sensitivity analysis
     N <- floor(tot_size[m]/(d+2+d*(d-1)/2))
-    Sobol_AKMCS_convergesize<- tot_size[m]
-    print(paste0("checking convergence of input ranking at a sample size of ", tot_size[m]))
-    
-    # Time for sensitivity analysis
-    start.time <- Sys.time()
-    
-    mat <- sobol_matrices(N = N, params = as.character(c(1:d)), order = "second")
-    
-    Y_S <- Kriging(mat)
-    
-    S_AKMCS <- sobol_indices_boot(Y=Y_S,N=N,params = as.character(c(1:d)),
-                                  boot=TRUE,R=nboot,order="second")
-    
-    end.time<-Sys.time()
-    time_sobol<- difftime(end.time,start.time,units = "secs")
-    T_AKMCSSobol<-c(T_AKMCSSobol,time_sobol)
-    
-    # convergence of ranking:
-    
-    start.time <- Sys.time()
-    
-    Sens <- S_AKMCS$boot$t[ ,c((1+d):(2*d))]
-    Rank <- t(apply(Sens, 1, rank))
-    for (boot_ind1 in 1:(nboot-1)){
-      T <- boot_ind1
-      for (boot_ind2 in (T+1):nboot){
-        Rho <- rep(NA,d)
-        Weights <- rep(NA,d)
-        for (para_ind in 1:d){
-          Weights[para_ind] <- (max(Sens[boot_ind1,para_ind],max(Sens[boot_ind2,para_ind])))^2
-        }
-        Weights_sum <- sum(Weights)
-        for (para_ind in 1:d){
-          Rho[para_ind] <- abs(Rank[boot_ind1,para_ind]-Rank[boot_ind2,para_ind])*
-            Weights[para_ind]/Weights_sum
-        }
-        if (boot_ind2 == 2){
-          Rho_all <- Rho
-        } else{
-          Rho_all <- append(Rho_all,Rho)
+    if (N>=2) {
+      Sobol_AKMCS_convergesize<- tot_size[m]
+      print(paste0("checking convergence of input ranking at a sample size of ", tot_size[m]))
+      
+      # Time for sensitivity analysis
+      start.time <- Sys.time()
+      
+      mat <- sobol_matrices(N = N, params = as.character(c(1:d)), order = "second")
+      
+      Y_S <- Kriging(mat)
+      
+      S_AKMCS <- sobol_indices_boot(Y=Y_S,N=N,params = as.character(c(1:d)),
+                                    boot=TRUE,R=nboot,order="second")
+      
+      end.time<-Sys.time()
+      time_sobol<- difftime(end.time,start.time,units = "secs")
+      T_AKMCSSobol<-c(T_AKMCSSobol,time_sobol)
+      
+      # convergence of ranking:
+      
+      start.time <- Sys.time()
+      
+      Sens <- S_AKMCS$boot$t[ ,c((1+d):(2*d))]
+      Rank <- t(apply(Sens, 1, rank))
+      for (boot_ind1 in 1:(nboot-1)){
+        T <- boot_ind1
+        for (boot_ind2 in (T+1):nboot){
+          Rho <- rep(NA,d)
+          Weights <- rep(NA,d)
+          for (para_ind in 1:d){
+            Weights[para_ind] <- (max(Sens[boot_ind1,para_ind],max(Sens[boot_ind2,para_ind])))^2
+          }
+          Weights_sum <- sum(Weights)
+          for (para_ind in 1:d){
+            Rho[para_ind] <- abs(Rank[boot_ind1,para_ind]-Rank[boot_ind2,para_ind])*
+              Weights[para_ind]/Weights_sum
+          }
+          if (boot_ind2 == 2){
+            Rho_all <- Rho
+          } else{
+            Rho_all <- append(Rho_all,Rho)
+          }
         }
       }
+      Rho_all <- matrix(Rho_all, nrow = d)
+      Rho_all <- apply(Rho_all, 2, sum)
+      
+      end.time <- Sys.time()
+      time_check <- difftime(end.time,start.time,units = "secs")
+      T_check_AKMCS<- c(T_check_AKMCS,time_check)
+      
+      save(T_AKMCSSobol,file = paste0(folder,"/T_AKMCSSobol"))
+      save(T_check_AKMCS,file=paste0(folder,"/T_check_AKMCS"))
+      save(S_AKMCS,file=paste0(folder,"/S_AKMCS"))
+      save(Sobol_AKMCS_convergesize,file=paste0(folder,"/Sobol_AKMCS_convergesize"))
+      
+      if (!any(is.na(Rho_all))){
+        #print(quantile(Rho_all,probs = 0.95, na.rm = TRUE))
+        if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
+          break
+        } 
+      }
     }
-    Rho_all <- matrix(Rho_all, nrow = d)
-    Rho_all <- apply(Rho_all, 2, sum)
     
-    end.time <- Sys.time()
-    time_check <- difftime(end.time,start.time,units = "secs")
-    T_check_AKMCS<- c(T_check_AKMCS,time_check)
-    
-    save(T_AKMCSSobol,file = paste0(folder,"/T_AKMCSSobol"))
-    save(T_check_AKMCS,file=paste0(folder,"/T_check_AKMCS"))
-    save(S_AKMCS,file=paste0(folder,"/S_AKMCS"))
-    save(Sobol_AKMCS_convergesize,file=paste0(folder,"/Sobol_AKMCS_convergesize"))
-    
-    if (!any(is.na(Rho_all))){
-      #print(quantile(Rho_all,probs = 0.95, na.rm = TRUE))
-      if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
-        break
-      } 
-    }
   }
   
-}
+# }
 
