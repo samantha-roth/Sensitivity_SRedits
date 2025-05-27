@@ -5,7 +5,9 @@ To run the analysis, simply follow the scripts based on their beginning numbers:
 1_ through 4_ scripts are the analysis of the four sensitivity analysis methods. They record the convergence size and sensitivity indices under different sample sizes.
 
 5_ scripts compute quantities for comparison of sensitivity analysis approaches based on their outputs. 
-- Scripts starting with 5_computeTotalTimes should be run before those starting with 5_computeTimeStats.
+1. Scripts starting with 5_computeTotalTimes
+2. Scripts starting with 5_computeTimeStats
+3. Scripts starting with 5_getBestForAllSeeds
 
 6_ scripts compare sensitivity analysis approaches using the computed quantities.
 - Scripts starting with 6_howBetterIsBest should be run before those starting with 6_whatIsBetterNoBest.
