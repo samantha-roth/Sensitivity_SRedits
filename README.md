@@ -1,3 +1,7 @@
+The R packages required for this analysis are `sensobol`, `lhs`, `BASS`, `GPfit`, and `mcse`. 
+
+Before installing the necessary R packages, we recommend updating R to version 4.4.2 and deleting any dependences for any of these R packages that were installed on an earlier version of R.
+
 To run the analysis, simply follow the scripts based on their beginning numbers:
 
 0_library.R is the script that loads all the packages, functions and parameters. You may change the test function to use or the testing dimensions or the sample sizes in this script. (you also define the working directory here, essentially you only to make changes in this script)
