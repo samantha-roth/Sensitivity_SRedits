@@ -116,56 +116,47 @@ foreach(node = 1:4)%dopar%{
     
     #print("files saved")
     start.time<- Sys.time()
-    # if(tot_steps>nwant_pred){
-    #   sample_every<- round(tot_steps/nwant_pred)
-    #   all_pred_inds<- round(seq(sample_every,tot_steps,length.out=nwant_pred))
-    #   
-    #   y<- matrix(NA,nrow=1,ncol=nrow(x_test))
-    #   start.time<- Sys.time()
-    #   for(i in 1:length(mod_list)){
-    #     #print(paste0("model ",i))
-    #     curr_inds<- all_pred_inds[which(all_pred_inds%in%which(mod_inds==i))]#; print("curr_inds done")
-    #     pred_inds<- curr_inds-cs_steps[i]#; print("pred_inds done")
-    #     y<- rbind(y,predict_modified(mod_list[[i]],x_test,mcmc.use=pred_inds))#; print("y done")
-    #     #y[(cs_steps[i]+1):cs_steps[i+1],]<- predict(mod_list[[i]],x_test)
-    #   }
-    #   y<- y[-1,]; print("y done done")
-    # } else{
-    #   y<- matrix(NA,nrow=1,ncol=nrow(x_test))
-    #   start.time<- Sys.time()
-    #   for(i in 1:length(mod_list)){
-    #     y<- rbind(y,predict_modified(mod_list[[i]],x_test))#; print("y done")
-    #   }
-    #   y<- y[-1,]; print("y done done")
-    # }
-    
-    #y<- predict(mod_list[[1]],x_test)
-    
-    y<- matrix(NA,nrow=1,ncol=nrow(x_test))
-    for(i in 1:length(mod_list)){
-      mod_i<- mod_list[[i]]
-      # print(paste0("i=",i))
-      # toy_inds<- 1:length(mod_i$s2)
-      # pred_inds<- 1:((mod_i$nmcmc-mod_i$nburn)/mod_i$thin)
-      # print(paste0("min(pred_inds)= ",min(pred_inds)))
-      # print(paste0("max(pred_inds)= ",max(pred_inds)))
-      # print(paste0("length(mod_i$s2)= ", length(mod_i$s2)))
+    if(tot_steps>nwant_pred){
       
-      valid_steps<- which(mod_i$model.lookup>0)
+      sample_every<- round(tot_steps/nwant_pred)
+      all_pred_inds<- round(seq(sample_every,tot_steps,length.out=nwant_pred))
+      y<- matrix(NA,nrow=1,ncol=nrow(x_test))
       
-      # print(paste0("min(mod_i$model.lookup)= ", min(mod_i$model.lookup), 
-      #              ", max(mod_i$model.lookup)= ", max(mod_i$model.lookup),
-      #              ", length(which(is.na(mod_i$model.lookup)))= ", 
-      #              length(which(is.na(mod_i$model.lookup)))))
-      
-      # print(paste0("min(mod_i$model.lookup[pred_inds])= ", min(mod_i$model.lookup[pred_inds]), 
-      #       ", max(mod_i$model.lookup[pred_inds])= ", max(mod_i$model.lookup[pred_inds]),
-      #       ", length(which(is.na(mod_i$model.lookup[pred_inds])))= ", 
-      #       length(which(is.na(mod_i$model.lookup[pred_inds])))))
-      
-      y<- rbind(y,predict(mod_i,x_test,mcmc.use= valid_steps))
+      for(i in 1:length(mod_list)){
+        
+        mod_i<- mod_list[[i]]
+        #print(paste0("model ",i))
+        curr_inds<- all_pred_inds[which(all_pred_inds%in%which(mod_inds==i))]#; print("curr_inds done")
+        pred_inds<- curr_inds-cs_steps[i]#; print("pred_inds done")
+        
+        valid_inds<- which(mod_i$model.lookup>0)
+        use_inds<- intersect(pred_inds,valid_inds)
+        
+        y<- rbind(y,predict_modified(mod_i,x_test,mcmc.use=use_inds))#; print("y done")
+        #y[(cs_steps[i]+1):cs_steps[i+1],]<- predict(mod_list[[i]],x_test)
+      }
+    } else{
+      y<- matrix(NA,nrow=1,ncol=nrow(x_test))
+      for(i in 1:length(mod_list)){
+        mod_i<- mod_list[[i]]
+        
+        valid_inds<- which(mod_i$model.lookup>0)
+        
+        y<- rbind(y,predict_modified(mod_i,x_test,mcmc.use=valid_inds))#; print("y done")
+      }
     }
-    y<- y[-1,]; print("y done")
+    y<- y[-1,]; print("y done done")
+    
+    # y<- matrix(NA,nrow=1,ncol=nrow(x_test))
+    # for(i in 1:length(mod_list)){
+    #   mod_i<- mod_list[[i]]
+    #   
+    #   valid_steps<- which(mod_i$model.lookup>0)
+    #   
+    #   y<- rbind(y,predict(mod_i,x_test,mcmc.use= valid_steps))
+    # }
+    # y<- y[-1,]; print("y done")
+    
     
     end.time<- Sys.time()
     pred_time<- difftime(end.time,start.time, units = "secs")
