@@ -9,7 +9,7 @@ graphics.off()
 
 source("0_library.R")
 source("bass_mcmc_size.R")
-#source("predict_modified.R")
+source("check_T_convergence.R")
 
 print("3_BASS1_mmESS100.R")
 
@@ -113,50 +113,15 @@ foreach(node = 1:4)%dopar%{
     save(mESS,file=paste0(folder,"/mESS"))
     save(mod_list,file=paste0(folder,"/mod_list"))
     
-    
-    #print("files saved")
-    start.time<- Sys.time()
-    if(tot_steps>nwant_pred){
+    y<- matrix(NA,nrow=1,ncol=nrow(x_test))
+    for(i in 1:length(mod_list)){
+      mod_i<- mod_list[[i]]
       
-      sample_every<- round(tot_steps/nwant_pred)
-      all_pred_inds<- round(seq(sample_every,tot_steps,length.out=nwant_pred))
-      y<- matrix(NA,nrow=1,ncol=nrow(x_test))
+      valid_steps<- which(mod_i$model.lookup>0)
       
-      for(i in 1:length(mod_list)){
-        
-        mod_i<- mod_list[[i]]
-        #print(paste0("model ",i))
-        curr_inds<- all_pred_inds[which(all_pred_inds%in%which(mod_inds==i))]#; print("curr_inds done")
-        pred_inds<- curr_inds-cs_steps[i]#; print("pred_inds done")
-        
-        valid_inds<- which(mod_i$model.lookup>0)
-        use_inds<- intersect(pred_inds,valid_inds)
-        
-        y<- rbind(y,predict_modified(mod_i,x_test,mcmc.use=use_inds))#; print("y done")
-        #y[(cs_steps[i]+1):cs_steps[i+1],]<- predict(mod_list[[i]],x_test)
-      }
-    } else{
-      y<- matrix(NA,nrow=1,ncol=nrow(x_test))
-      for(i in 1:length(mod_list)){
-        mod_i<- mod_list[[i]]
-        
-        valid_inds<- which(mod_i$model.lookup>0)
-        
-        y<- rbind(y,predict_modified(mod_i,x_test,mcmc.use=valid_inds))#; print("y done")
-      }
+      y<- rbind(y,predict(mod_i,x_test,mcmc.use= valid_steps))
     }
-    y<- y[-1,]; print("y done done")
-    
-    # y<- matrix(NA,nrow=1,ncol=nrow(x_test))
-    # for(i in 1:length(mod_list)){
-    #   mod_i<- mod_list[[i]]
-    #   
-    #   valid_steps<- which(mod_i$model.lookup>0)
-    #   
-    #   y<- rbind(y,predict(mod_i,x_test,mcmc.use= valid_steps))
-    # }
-    # y<- y[-1,]; print("y done")
-    
+    y<- y[-1,]
     
     end.time<- Sys.time()
     pred_time<- difftime(end.time,start.time, units = "secs")
@@ -179,73 +144,18 @@ foreach(node = 1:4)%dopar%{
     }
     # otherwise perform sensitivity analysis and record the time
     else{
-      S_BASS_list<- list()
-      start.time <- Sys.time()
-      for(i in 1:length(mod_list)){
-        S_BASS_list[[i]] <- sobol(mod_list[[i]], verbose = FALSE)
-      }
-      #S_BASS <- sobol(mod, verbose = FALSE)
-      end.time <- Sys.time()
-      time_sobol <- difftime(end.time,start.time,units = "secs")
-      T_BASSSobol<- c(T_BASSSobol,time_sobol)
+      check_T_out<- check_T_convergence(x=x,y=y,mod_list=mod_list, burn_size=burn_size, nthin=nthin, nwant_T=nwant_T)
       
-      start.time <- Sys.time()
-      Important_indices <- as.numeric(names(S_BASS_list[[1]]$T[1, ]))
+      mod_list<- check_T_out[[1]]
+      S_BASS_list<- check_T_out[[2]]
+      T_BASSSobol<- check_T_out[[3]]
+      T_check_BASS<- check_T_out[[4]]
       
-      # Because we are not using sensobol package here, we need an additional convergence check for the Sobol
-      #     analysis. Usually if the emulator's quality is good enough, the sensitivity analysis results should
-      #     be stable. We add a convergence check here to make sure the results are reliable. If the results are 
-      #     not converged, add the BASS sample size by d.
-      
-      # If converged, save the emulation time, sensitivity analysis time, sensitivity indices and the sample size
-      all_T<- matrix(NA,nrow=tot_steps,ncol=length(Important_indices))
-      for(i in 1:length(S_BASS_list)){
-        all_T[(cs_steps[i]+1):cs_steps[i+1],]<- as.matrix(S_BASS_list[[i]]$T)
-      }
-      
-      sample_every_T<- round(tot_steps/nwant_T)
-      want_T_inds<- round(seq(sample_every_T,tot_steps,length.out=nwant_T))
-      
-      Sens <- all_T[want_T_inds,c(1:length(Important_indices))]
-      Rank <- t(apply(Sens, 1, rank))
-      for (boot_ind1 in 1:99){
-        T <- boot_ind1
-        for (boot_ind2 in (T+1):100){
-          Rho <- rep(NA,length(Important_indices))
-          Weights <- rep(NA,length(Important_indices))
-          for (para_ind in 1:length(Important_indices)){
-            Weights[para_ind] <- (max(Sens[boot_ind1,para_ind],max(Sens[boot_ind2,para_ind])))^2
-          }
-          Weights_sum <- sum(Weights)
-          for (para_ind in 1:length(Important_indices)){
-            Rho[para_ind] <- abs(Rank[boot_ind1,para_ind]-Rank[boot_ind2,para_ind])*
-              Weights[para_ind]/Weights_sum
-          }
-          if (boot_ind2 == 2){
-            Rho_all <- Rho
-          } else{
-            Rho_all <- append(Rho_all,Rho)
-          }
-        }
-      }
-      Rho_all <- matrix(Rho_all, nrow = d)
-      Rho_all <- apply(Rho_all, 2, sum)
-      
-      end.time <- Sys.time()
-      time_check <- difftime(end.time,start.time,units = "secs")
-      T_check_BASS<- c(T_check_BASS,time_check)
-      
+      save(mod_list,file=paste0(folder,"/mod_list"))
       save(T_check_BASS, file = paste0(folder, "/T_check_BASS"))
       save(T_BASSSobol,file = paste0(folder,"/T_BASSSobol"))
       save(S_BASS_list,file = paste0(folder,"/S_BASS_list"))
-      
-      if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
-        break
-      } else{
-        BASS_size <- BASS_size + d
-        BASS_size_vec<- c(BASS_size_vec,BASS_size)
-      }
-      
+      break
     }
   }
   
