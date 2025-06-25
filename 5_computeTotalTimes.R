@@ -40,13 +40,13 @@ for (i in 1:(length(D))) {
   Sobol_convergesize <- S$C
   
   # BASS:
-  load(paste0(folder, "/BASS/T_BASS"))
-  load(paste0(folder, "/BASS/T_pred_BASS"))
-  load(paste0(folder, "/BASS/T_LHS_BASS"))
-  load(paste0(folder, "/BASS/T_check_BASS"))
-  load(paste0(folder,"/BASS/T_BASSSobol"))
-  load(paste0(folder,"/BASS/S_BASS"))
-  load(paste0(folder,"/BASS/BASS_size"))
+  load(paste0(folder, "/BASS_mmESS/T_BASS")) #keep
+  load(paste0(folder, "/BASS_mmESS/T_pred_BASS")) #keep
+  load(paste0(folder, "/BASS_mmESS/T_LHS_BASS")) #keep
+  load(paste0(folder, "/BASS_mmESS/T_check_BASS")) #keep
+  load(paste0(folder,"/BASS_mmESS/T_BASSSobol")) #keep
+  load(paste0(folder,"/BASS_mmESS/S_BASS_list")) #change to S_BASS_list
+  load(paste0(folder,"/BASS_mmESS/BASS_size")) #keep
   
   #get all the sizes tested in standard Sobol'
   d<-tested_D_num[i]
@@ -62,10 +62,7 @@ for (i in 1:(length(D))) {
   # Calculation of the computational time in each scenario
   # Sensitivity analysis time + model evaluation adjusted time + emulation time
   for (j in 1:length(tested_eval_time)) {
-    tot_Sobol_eval_time<-0 
-    for(m in 1:length(all_sizes)){
-      tot_Sobol_eval_time<- tot_Sobol_eval_time + tested_eval_time[j]*all_sizes[m]
-    }
+    tot_Sobol_eval_time<- sum(tested_eval_time[j]*all_sizes)
     Time_Sobol[i,j] <- sum(T_Sobol)- length(T_Sobol)*avg_eval_time + sum(T_check_Sobol) + tot_Sobol_eval_time
     Time_BASS[i,j] <- sum(T_LHS_BASS) + sum(T_BASS)+ sum(T_pred_BASS) + tested_eval_time[j]*BASS_size + sum(T_BASSSobol) + sum(T_check_BASS)
   }
@@ -137,13 +134,13 @@ for(node in 1:n_nodes){
     Sobol_convergesize <- S$C
     
     # BASS:
-    load(paste0(folder, "/BASS/seed",seed,"/T_BASS"))
-    load(paste0(folder, "/BASS/seed",seed,"/T_pred_BASS"))
-    load(paste0(folder, "/BASS/seed",seed,"/T_LHS_BASS"))
-    load(paste0(folder, "/BASS/seed",seed,"/T_check_BASS"))
-    load(paste0(folder,"/BASS/seed",seed,"/T_BASSSobol"))
-    load(paste0(folder,"/BASS/seed",seed,"/S_BASS"))
-    load(paste0(folder,"/BASS/seed",seed,"/BASS_size"))
+    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_BASS"))
+    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_pred_BASS"))
+    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_LHS_BASS"))
+    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_check_BASS"))
+    load(paste0(folder,"/BASS_mmESS/seed",seed,"/T_BASSSobol"))
+    load(paste0(folder,"/BASS_mmESS/seed",seed,"/S_BASS_list"))
+    load(paste0(folder,"/BASS_mmESS/seed",seed,"/BASS_size"))
     
     #get all the sizes tested in standard Sobol'
     d<-tested_D_num[i]
@@ -159,10 +156,7 @@ for(node in 1:n_nodes){
     # Calculation of the computational time in each scenario
     # Sensitivity analysis time + model evaluation adjusted time + emulation time
     for (j in 1:length(tested_eval_time)) {
-      tot_Sobol_eval_time<-0 
-      for(m in 1:length(all_sizes)){
-        tot_Sobol_eval_time<- tot_Sobol_eval_time + tested_eval_time[j]*all_sizes[m]
-      }
+      tot_Sobol_eval_time<- sum(tested_eval_time[j]*all_sizes)
       Time_Sobol[i,j] <- sum(T_Sobol)- length(T_Sobol)*avg_eval_time + sum(T_check_Sobol) + tot_Sobol_eval_time
       Time_BASS[i,j] <- sum(T_LHS_BASS) + sum(T_BASS)+ sum(T_pred_BASS) + tested_eval_time[j]*BASS_size + sum(T_BASSSobol) + sum(T_check_BASS)
     }
