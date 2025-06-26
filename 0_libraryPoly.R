@@ -2,7 +2,7 @@
 
 #The working folder with scripts and data
 # testing
-setwd("/Users/jeremywang/Documents/GitHub/Sensitivity_SRedits_Final")
+setwd("/dartfs-hpc/rc/home/y/f0071xy/Sensitivity_SRedits_Final")
 
 # Load the required functions and packages
 source("sobol_indices_boot.R")

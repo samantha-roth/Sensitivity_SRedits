@@ -8,7 +8,7 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/Users/jeremywang/Documents/GitHub/Sensitivity_SRedits_Final")
+setwd("/dartfs-hpc/rc/home/y/f0071xy/Sensitivity_SRedits_Final")
 
 source("0_libraryPoly.R")
 

@@ -5,7 +5,7 @@ rm(list = ls())
 graphics.off()
 
 # Set a working directory, please set it to your own working folder when testing
-setwd("/Users/jeremywang/Documents/GitHub/Sensitivity_SRedits_Final")
+setwd("/dartfs-hpc/rc/home/y/f0071xy/Sensitivity_SRedits_Final")
 
 # Load the required packages
 source("0_libraryPoly.R")

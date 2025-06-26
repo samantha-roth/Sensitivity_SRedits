@@ -4,7 +4,7 @@
 rm(list = ls())
 graphics.off()
 
-source("0_library.R")
+source("0_libraryPoly.R")
 
 for(k in 1:6){
   for(node in 1:4){
@@ -13,7 +13,7 @@ for(k in 1:6){
     print(paste0("seed= ",seed))
     d=D[k]
     
-    folder<-paste0(folderpath,d,"D/Sobol/seed",seed)
+    folder<-paste0(folderpath,"Polynomial/",d,"D/Sobol/seed",seed)
     
     try(load(paste0(folder, "/T_check_Sobol")))
     try(load(paste0(folder,"/T_Sobol")))
