@@ -3,7 +3,7 @@
 #       the example outputs except for the computational time (because the machines are different). 
 #       This note applies to all the scripts in this study.
 
-
+# 
 # Remove all existing environment and plots
 rm(list = ls())
 graphics.off()
