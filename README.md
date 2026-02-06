@@ -31,6 +31,8 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * `7_SamFig2_MeanBests.R` produces Figure 2 in the manuscript which shows for what model run times and numbers of model runs there is a fastest approach across all models.
     * Scripts starting with `7_SamFig3` produce parts a, b, and c of Figure 3 in the manuscript. `7_SamFig3_G_Mean.R` produces part a; `7_SamFig3_Poly_Mean.R` produces part b, and `7_SamFig3_Hymod_SACSMA10_Mean.R` produces part c. These figures show how much time using the fastest approach saves on average compared to the slowest approach for each model.
     * `7_SamFig4_BiggestRangeTextMat.R` produces Figure 4 in the manuscript which shows which approach has the most variable computational needs across all models and seeds.
+    * `7_SamFig5_SobolEnough.R` produces Figure 5 in the manuscript which shows whether standard Sobol' is fast enough to justify not using an emulation-based approach.
+    * Scripts starting with `7_SamFigSupplement` produce parts a, b, and c of the figure in the supplementary material which shows how long Sobol' sensitivity analysis takes using the fastest approach for (a) the G function, (b) the polynomial, (c) Hymod, and (c) SACSMA.
 
 10_Timescales.R generates plots that show the timescale needed for each combination of model run time and model input dimension. There is one plot per sensitivity analysis method.
 
