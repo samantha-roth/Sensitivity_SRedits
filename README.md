@@ -4,9 +4,9 @@ Before installing the necessary R packages, we recommend updating R to version 4
 
 This analysis contains four options of computer models: Sobol's G function, a simple polynomial function, Hymod, and SAC-SMA. This analysis also contains six options of numbers of model parameters (2, 5, 10, 15, 20, 30) for the G function and the polynomial. When the number of parameters is 15 or more, obtaining sensitivity analysis results for the G function may take a very long time. We recommend using a high-performance computing system to run these codes.
 
-To run the analysis, simply follow the scripts based on their beginning numbers:
+## Description of scripts
 
-0_library.R is the script that loads all the packages, functions and parameters. You may change the test function to use or the testing dimensions or the sample sizes in this script. (you also define the working directory here, essentially you only to make changes in this script)
+1. `0_library.R` (`0_libraryHymod.R`, `0_librarySACSMA10par`, `polynomial/0_libraryPoly.R`) is the script that loads all the packages and defines the test models and the numbers of parameters to test. Edit this script to define the working directory. This script is called by the other scripts that perform sensitivity analysis and does not have to be run on its own. `0_library.R` corresponds to Sobol's G function, `0_libraryHymod.R` corresponds to Hymod,`0_librarySACSMA10par.R` corresponds to SACSMA, and `0_libraryPoly.R` in the `polynomial` folder corresponds to the polynomial function.
 
 1_ through 4_ scripts are the analysis of the four sensitivity analysis methods. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
