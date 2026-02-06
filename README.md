@@ -23,9 +23,14 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * After running the scripts startings with `5_getRankings`, you can run the scripts starting with `5_getRho`. Scripts that start with `5_getRho` and end with `0.05` (NE) such as `5_getRho_SACSMA10_0.05.R` remove parameters with total sensitivity indices less than 0.05 from the calculations to consider how removing the effects of unimportant parameters changes results. We find results are practically the same.
 
 4. Scripts starting with 6_ compare sensitivity analysis approaches using the computed quantities.
+    * Scripts starting with `6_compareMeanFastestToSobol` compare how much time is needed on average by the mean fastest approach to both the mean and max standard Sobol' times.
+    * `6_whereSobolEnoughAllModels.R` identifies for which combinations of model run time and number of parameters, Sobol' is fast enough for computer models considered.
+    * `6_compareRhosAcrossModels.R` and `6_compareRhosAcrossModels_0.05.R` (NE) compare how well the rankings produced by each of the emulation-based approaches match the rankings given by standard Sobol'.
 
-7_ scripts generate plots to compare sensitivity analysis approaches.
-- To generate FastestMeanTime.pdf, run 7_FastestMeanTimeFig.R
+5. Scripts starting with 7_ generate plots to compare sensitivity analysis approaches.
+    * `7_SamFig2_MeanBests.R` produces Figure 2 in the manuscript which shows for what model run times and numbers of model runs there is a fastest approach across all models.
+    * Scripts starting with `7_SamFig3` produce parts a, b, and c of Figure 3 in the manuscript. `7_SamFig3_G_Mean.R` produces part a; `7_SamFig3_Poly_Mean.R` produces part b, and `7_SamFig3_Hymod_SACSMA10_Mean.R` produces part c. These figures show how much time using the fastest approach saves on average compared to the slowest approach for each model.
+    * `7_SamFig4_BiggestRangeTextMat.R` produces Figure 4 in the manuscript which shows which approach has the most variable computational needs across all models and seeds.
 
 10_Timescales.R generates plots that show the timescale needed for each combination of model run time and model input dimension. There is one plot per sensitivity analysis method.
 
