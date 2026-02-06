@@ -1,4 +1,4 @@
-The R packages required for this analysis are `sensobol`, `lhs`, `BASS`, `GPfit`, and `mcse`. 
+The R packages in the format "`package` (version)" required for this analysis arerequired for this analysis are `sensobol` (1.1.5), `lhs` (1.2.0), `BASS` (1.3.1), `GPfit` (1.0-8), and `mcmcse` (1.5-0). 
 
 Before installing the necessary R packages, we recommend updating R to version 4.4.2 and deleting any dependences for any of these R packages that were installed on an earlier version of R.
 
