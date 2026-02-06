@@ -10,11 +10,12 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 2. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
-3. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs. Run scripts starting with the following in the following order:
-    * `5_computeTotalTimes` then
-    * `5_computeTimeStats`.
-      
-   After that, you can run scripts starting with `5_getMeanBestAcrossSeeds`, and after running all of those, you can run `5_getMeanBestAllModels.R` and `5_getMeanWorstAllModels.R`. You do not need to wait until after running scripts that start with `5_computeTotalTimes` to run scripts starting with `5_getRankings`. After running the scripts startings with `5_getRankings`, you can run the scripts starting with `5_getRho`. Scripts that start with `5_getRho` and end with `0.05` such as 5_getRho_SACSMA10_0.05.R` remove parameters with total sensitivity indices less than 0.05 from the calculations to consider how removing the effects of unimportant parameters changes results. We find results are practically the same.
+3. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
+    * Run scripts starting with the following in the following order:`5_computeTotalTimes` then `5_computeTimeStats`.
+    * After that, you can run scripts starting with `5_getMeanBestAcrossSeeds`.
+    * After running all of those, you can run `5_getMeanBestAllModels.R` and `5_getMeanWorstAllModels.R`.
+    * You do not need to wait until after running scripts that start with `5_computeTotalTimes` to run scripts starting with `5_getRankings`.
+    * After running the scripts startings with `5_getRankings`, you can run the scripts starting with `5_getRho`. Scripts that start with `5_getRho` and end with `0.05` such as 5_getRho_SACSMA10_0.05.R` remove parameters with total sensitivity indices less than 0.05 from the calculations to consider how removing the effects of unimportant parameters changes results. We find results are practically the same.
 
 6_ scripts compare sensitivity analysis approaches using the computed quantities.
 - Scripts starting with 6_howBetterIsBest should be run before those starting with 6_whatIsBetterNoBest.
