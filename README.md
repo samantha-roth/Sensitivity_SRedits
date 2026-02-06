@@ -11,9 +11,9 @@ This analysis contains four options of computer models: Sobol's G function, a si
 2. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
 3. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs. Run these in the following order.
-   a. Scripts starting with 5_computeTotalTimes
-   b. Scripts starting with 5_computeTimeStats
-   c. Scripts starting with 5_getBestForAllSeeds
+    a. Scripts starting with 5_computeTotalTimes
+    b. Scripts starting with 5_computeTimeStats
+    c. Scripts starting with 5_getBestForAllSeeds
 
 6_ scripts compare sensitivity analysis approaches using the computed quantities.
 - Scripts starting with 6_howBetterIsBest should be run before those starting with 6_whatIsBetterNoBest.
