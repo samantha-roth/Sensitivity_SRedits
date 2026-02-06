@@ -16,6 +16,7 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * Run `5_doesItFinish.R` (NE) to check which approaches finished running for which models and numbers of parameters.
     * Run `5_howLongTilNoFinish.R` (NE) to check the amount of compute time used when sensitivity analysis was never finished due to computational constraints.
     * Run scripts starting with the following in the following order:`5_computeTotalTimes` then `5_computeTimeStats`.
+    * Run `5_bestFor30D.R` to identify a fastest approach if possible when there are 30 parameters and results don't always finish.
     * After that, you can run scripts starting with `5_getMeanBestAcrossSeeds` and `5_getMeanWorstAcrossSeeds` (NE).
     * After running all of those, you can run `5_getMeanBestAllModels.R`, `5_getMeanWorstAllModels.R` (NE), `5_getBiggestRangeAllSeedsAllModels.R`, `5_getSmallestRangeAllSeedsAllModels.R` (NE), and `getBestAllSeedsAndModels.R` (NE).
     * You do not need to wait until after running scripts that start with `5_computeTotalTimes` to run scripts starting with `5_getRankings`.
