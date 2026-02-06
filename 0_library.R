@@ -5,10 +5,12 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 
 # Load the required functions and packages
 source("sobol_indices_boot.R")
-#source("sib_simplified.R")
+
+library(sensobol)
 library(GPfit)
 library(lhs)
 library(BASS)
+library(mcmcse)
 
 # The dimensions we consider
 D <- c(2,5,10,15,20,30)
