@@ -11,24 +11,24 @@ graphics.off()
 source("0_library.R")
 
 #necessary packages for parallelization
-library("foreach")
-library("doParallel")
+# library("foreach")
+# library("doParallel")
 
-print("1_Sobol_diffseeds.R") 
+print("1_Sobol_node1.R") 
 
-#setup parallel backend to use many processors
-cores=detectCores()
-cl <- makeCluster(cores[1]-1) # -1 not to overload system
-registerDoParallel(cl)
-
-#foreach executes the code within the brackets separately on each node
-foreach(node = 1:4)%dopar%{ 
-  
+# #setup parallel backend to use many processors
+# cores=detectCores()
+# cl <- makeCluster(cores[1]-1) # -1 not to overload system
+# registerDoParallel(cl)
+# 
+# #foreach executes the code within the brackets separately on each node
+# foreach(node = 1:4)%dopar%{ 
+  node=1
   source("0_library.R")
   
   #Define the test model in each dimension and perform the Sobol analysis
   for (k in 1:3){
-
+    
     seed<- node*k*10
     set.seed(seed)
     
@@ -143,5 +143,6 @@ foreach(node = 1:4)%dopar%{
       }
     }
   }
-}
+# }
+
 

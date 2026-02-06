@@ -2,12 +2,10 @@
 rm(list=ls())
 graphics.off()
 
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+
 source("0_library.R")
 source("extra_functions.R")
-
-# Load the required package for plotting
-library(plot.matrix)
-library(RColorBrewer)
 
 # Tested dimension, method names, and evaluation time
 tested_D_num <- c(2,5,10,15,20,30)
@@ -34,7 +32,7 @@ load(paste0("./Ranking_Data/Summary_Time_AKMCS"))
 # Compare the max Sobol time to the min of all other approaches
 Mat_maxSobol <- Max_Time_Sobol
 textMat_maxSobol <- matrix(NA,nrow=nrow(Mat_maxSobol),ncol=ncol(Mat_maxSobol))
-for (i in 1:(length(tested_D)-1)){
+for (i in 1:(length(tested_D))){
   for (j in 1:length(tested_eval_time)){
 
       Mat_maxSobol[i,j] <- min(Max_Time_Sobol[i,j],Min_Time_Kriging[i,j],
@@ -58,6 +56,7 @@ save(textMat_maxSobol,file="./Ranking_Data/textMat_maxSobol")
 print(textMat_maxSobol)
 #Sobol is always fastest for fast and faster high dimensional models
 
+Sobol_inds<- which(textMat_maxSobol=="Sobol")
 #-------------------------------------------------------------
 # Compare the max BASS time to the min of all other approaches
 Mat_maxBASS <- Max_Time_BASS
@@ -86,6 +85,7 @@ save(textMat_maxBASS,file="./Ranking_Data/textMat_maxBASS")
 print(textMat_maxBASS)
 #BASS is never always fastest across all seeds considering up to 20D
 
+BASS_inds<- which(textMat_maxBASS=="BASS")
 #-------------------------------------------------------------
 # Compare the max Kriging time to the min of all other approaches
 Mat_maxKriging <- Max_Time_Kriging
@@ -115,6 +115,7 @@ print(textMat_maxKriging)
 #Kriging is only fastest for a 1 min run time and 10D input dimension 
 #across all seeds considering up to 20D
 
+Kriging_inds<- which(textMat_maxKriging=="Kriging")
 #-------------------------------------------------------------
 # Compare the max AKMCS time to the min of all other approaches
 Mat_maxAKMCS <- Max_Time_AKMCS
@@ -146,3 +147,17 @@ print(textMat_maxAKMCS)
 #and for 10D input with 10 hr to 10 hr model run time
 #and for 15D and 20D inputs with 10 hr model run time
 #not considering 30D because still waiting
+
+AKMCS_inds<- which(textMat_maxAKMCS=="AKMCS")
+
+#-------------------------------------------------------------------------------
+#where is there a uniform best?
+
+textMat_uniformBest<- matrix(NA,nrow=nrow(Mat_maxSobol),ncol=ncol(Mat_maxSobol))
+textMat_uniformBest[AKMCS_inds]<- "AKMCS"
+textMat_uniformBest[BASS_inds]<- "BASS"
+textMat_uniformBest[Kriging_inds]<- "Kriging"
+textMat_uniformBest[Sobol_inds]<- "Sobol"
+
+save(textMat_uniformBest,file="./Ranking_Data/textMat_uniformBest")
+print(textMat_uniformBest)

@@ -6,9 +6,9 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
 
-source("0_library.R")
+source("0_libraryPoly.R")
 source("extra_functions.R")
 
 # Tested dimension, method names, and evaluation time
@@ -27,8 +27,13 @@ Time_BASS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
 
 # Load all related results for each test scenario
 for (i in 1:(length(D))) {
-  folder <- paste0("./Ranking_Data/",tested_D[i])
   
+  print(tested_D[i])
+  
+  # if(i<length(D)) folder <- paste0("./Jeremy/Ranking_Data/",tested_D[i])
+  # if(i==length(D)) folder <- paste0("./Ranking_Data/",tested_D[i])
+  folder <- paste0("./Ranking_Data/",tested_D[i])
+    
   # Sobol:
   load(paste0(folder,"/Sobol/T_Sobol"))
   load(paste0(folder,"/Sobol/T_check_Sobol"))
@@ -57,36 +62,43 @@ for (i in 1:(length(D))) {
 
 save(Time_Sobol,file=paste0("./Ranking_Data/Time_Sobol_node0"))
 
-for(i in 1:(length(D)-1)){
-  folder <- paste0("./Ranking_Data/",tested_D[i])
+for(i in 1:(length(D))){
+  
+  print(tested_D[i])
+  
+  folderS <- paste0("./Ranking_Data/",tested_D[i])
+  # folderJ<- paste0("./Jeremy/Ranking_Data/",tested_D[i])
+  # if(i< length(D)){
+  #   folder<- folderJ
+  # } else folder<- folderS
   
   # BASS:
-  load(paste0(folder, "/BASS_mmESS/T_BASS")) #keep
-  load(paste0(folder, "/BASS_mmESS/T_pred_BASS")) #keep
-  load(paste0(folder, "/BASS_mmESS/T_LHS_BASS")) #keep
-  load(paste0(folder, "/BASS_mmESS/T_check_BASS")) #keep
-  load(paste0(folder,"/BASS_mmESS/T_BASSSobol")) #keep
+  load(paste0(folderS, "/BASS_mmESS/T_BASS")) #keep
+  load(paste0(folderS, "/BASS_mmESS/T_pred_BASS")) #keep
+  load(paste0(folderS, "/BASS_mmESS/T_LHS_BASS")) #keep
+  load(paste0(folderS, "/BASS_mmESS/T_check_BASS")) #keep
+  load(paste0(folderS,"/BASS_mmESS/T_BASSSobol")) #keep
   # load(paste0(folder,"/BASS_mmESS/S_BASS_list")) #change to S_BASS_list
-  load(paste0(folder,"/BASS_mmESS/BASS_size")) #keep
+  load(paste0(folderS,"/BASS_mmESS/BASS_size")) #keep
   
   # Kriging:
-  load(paste0(folder,"/Kriging/T_Kriging"))
-  load(paste0(folder,"/Kriging/T_pred_Kriging"))
-  load(paste0(folder,"/Kriging/T_LHS_Kriging"))
-  load(paste0(folder,"/Kriging/T_KrigingSobol"))
-  load(paste0(folder,"/Kriging/T_check_Kriging"))
-  load(paste0(folder,"/Kriging/Kriging_size"))
-  # load(paste0(folder,"/Kriging/S_Kriging"))
+  load(paste0(folderS,"/Kriging/T_Kriging"))
+  load(paste0(folderS,"/Kriging/T_pred_Kriging"))
+  load(paste0(folderS,"/Kriging/T_LHS_Kriging"))
+  load(paste0(folderS,"/Kriging/T_KrigingSobol"))
+  load(paste0(folderS,"/Kriging/T_check_Kriging"))
+  load(paste0(folderS,"/Kriging/Kriging_size"))
+  # load(paste0(folderS,"/Kriging/S_Kriging"))
   # Sobol_Kriging_convergesize<- S$C
   
   # AKMCS:
-  load(paste0(folder,"/AKMCS/AKMCS_size"))
-  load(paste0(folder,"/AKMCS/T_AKMCS"))
-  load(paste0(folder,"/AKMCS/T_pred_AKMCS"))
-  load(paste0(folder,"/AKMCS/T_AKMCSSobol"))
-  load(paste0(folder,"/AKMCS/T_check_AKMCS"))
-  # load(paste0(folder,"/AKMCS/S_AKMCS"))
-  # load(paste0(folder,"/AKMCS/Sobol_AKMCS_convergesize"))
+  load(paste0(folderS,"/AKMCS/AKMCS_size"))
+  load(paste0(folderS,"/AKMCS/T_AKMCS"))
+  load(paste0(folderS,"/AKMCS/T_pred_AKMCS"))
+  load(paste0(folderS,"/AKMCS/T_AKMCSSobol"))
+  load(paste0(folderS,"/AKMCS/T_check_AKMCS"))
+  # load(paste0(folderS,"/AKMCS/S_AKMCS"))
+  # load(paste0(folderS,"/AKMCS/Sobol_AKMCS_convergesize"))
   # Sobol_AKMCS_convergesize<- S$C
   
   # Calculation of the computational time in each scenario
@@ -110,15 +122,17 @@ for(node in 1:(n_nodes-1)){
   # Total time of each method & each scenario
   Time_Sobol <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
   
+  print(paste0("node= ",node))
+  
   # Load all related results for each test scenario
   for (i in 1:(length(D))) {
     
-    print(paste0("node= ",node))
-    
-    print(paste0("k= ",i))
+    print(tested_D[i])
     
     seed_Sobol<- i*node*10
     
+    # if(i<length(D)) folder <- paste0("./Jeremy/Ranking_Data/",tested_D[i])
+    # if(i==length(D)) folder <- paste0("./Ranking_Data/",tested_D[i])
     folder <- paste0("./Ranking_Data/",tested_D[i])
     
     # Sobol:
@@ -151,48 +165,54 @@ for(node in 1:(n_nodes-1)){
 }
 
 for(node in 1:(n_nodes-1)){
+  
+  print(paste0("node= ",node))
+  
   # Total time of each method & each scenario
   Time_BASS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
   Time_Kriging <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
   Time_AKMCS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
   
   # Load all related results for each test scenario
-  for (i in 1:(length(D)-1)) {
+  for (i in 1:(length(D))) {
     
-    print(paste0("node= ",node))
-    print(paste0("k= ",i))
+    print(tested_D[i])
     
     seed<- i*node
     
-    folder <- paste0("./Ranking_Data/",tested_D[i])
+    folderS <- paste0("./Ranking_Data/",tested_D[i])
+    # folderJ<- paste0("./Jeremy/Ranking_Data/",tested_D[i])
+    # if(i< length(D)){
+    #   folder<- folderJ
+    # } else folder<- folderS
     
     # BASS:
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_pred_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_LHS_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_check_BASS"))
-    load(paste0(folder,"/BASS_mmESS/seed",seed,"/T_BASSSobol"))
+    load(paste0(folderS, "/BASS_mmESS/seed",seed,"/T_BASS"))
+    load(paste0(folderS, "/BASS_mmESS/seed",seed,"/T_pred_BASS"))
+    load(paste0(folderS, "/BASS_mmESS/seed",seed,"/T_LHS_BASS"))
+    load(paste0(folderS, "/BASS_mmESS/seed",seed,"/T_check_BASS"))
+    load(paste0(folderS,"/BASS_mmESS/seed",seed,"/T_BASSSobol"))
     # load(paste0(folder,"/BASS_mmESS/seed",seed,"/S_BASS_list"))
-    load(paste0(folder,"/BASS_mmESS/seed",seed,"/BASS_size"))
+    load(paste0(folderS,"/BASS_mmESS/seed",seed,"/BASS_size"))
     
     # Kriging:
-    load(paste0(folder,"/Kriging/seed",seed,"/T_Kriging"))
-    load(paste0(folder,"/Kriging/seed",seed,"/T_pred_Kriging"))
-    load(paste0(folder,"/Kriging/seed",seed,"/T_LHS_Kriging"))
-    load(paste0(folder,"/Kriging/seed",seed,"/T_KrigingSobol"))
-    load(paste0(folder,"/Kriging/seed",seed,"/T_check_Kriging"))
-    load(paste0(folder,"/Kriging/seed",seed,"/Kriging_size"))
-    # load(paste0(folder,"/Kriging/seed",seed,"/S_Kriging"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/T_Kriging"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/T_pred_Kriging"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/T_LHS_Kriging"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/T_KrigingSobol"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/T_check_Kriging"))
+    load(paste0(folderS,"/Kriging/seed",seed,"/Kriging_size"))
+    # load(paste0(folderS,"/Kriging/seed",seed,"/S_Kriging"))
     # Sobol_Kriging_convergesize<- S$C
     
     # AKMCS:
-    load(paste0(folder,"/AKMCS/seed",seed,"/AKMCS_size"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_AKMCS"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_pred_AKMCS"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_AKMCSSobol"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_check_AKMCS"))
-    # load(paste0(folder,"/AKMCS/seed",seed,"/S_AKMCS"))
-    # load(paste0(folder,"/AKMCS/seed",seed,"/Sobol_AKMCS_convergesize"))
+    load(paste0(folderS,"/AKMCS/seed",seed,"/AKMCS_size"))
+    load(paste0(folderS,"/AKMCS/seed",seed,"/T_AKMCS"))
+    load(paste0(folderS,"/AKMCS/seed",seed,"/T_pred_AKMCS"))
+    load(paste0(folderS,"/AKMCS/seed",seed,"/T_AKMCSSobol"))
+    load(paste0(folderS,"/AKMCS/seed",seed,"/T_check_AKMCS"))
+    # load(paste0(folderS,"/AKMCS/seed",seed,"/S_AKMCS"))
+    # load(paste0(folderS,"/AKMCS/seed",seed,"/Sobol_AKMCS_convergesize"))
     # Sobol_AKMCS_convergesize<- S$C
     
     # Calculation of the computational time in each scenario
@@ -202,45 +222,7 @@ for(node in 1:(n_nodes-1)){
       Time_Kriging[i,j] <- sum(T_LHS_Kriging) + sum(T_Kriging) + sum(T_pred_Kriging) + tested_eval_time[j]*Kriging_size + sum(T_KrigingSobol) + sum(T_check_Kriging)
       Time_AKMCS[i,j] <- sum(T_AKMCS) + sum(T_pred_AKMCS) + tested_eval_time[j]*AKMCS_size + sum(T_AKMCSSobol) + sum(T_check_AKMCS)
     }
-    
   }
-  
-  i= length(D)
-  if(node==1){
-    print(paste0("node= ",node))
-    print(paste0("k= ",i))
-    
-    seed<- i*node
-    
-    folder <- paste0("./Ranking_Data/",tested_D[i])
-    
-    # BASS:
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_pred_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_LHS_BASS"))
-    load(paste0(folder, "/BASS_mmESS/seed",seed,"/T_check_BASS"))
-    load(paste0(folder,"/BASS_mmESS/seed",seed,"/T_BASSSobol"))
-    # load(paste0(folder,"/BASS_mmESS/seed",seed,"/S_BASS_list"))
-    load(paste0(folder,"/BASS_mmESS/seed",seed,"/BASS_size"))
-    
-    # AKMCS:
-    load(paste0(folder,"/AKMCS/seed",seed,"/AKMCS_size"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_AKMCS"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_pred_AKMCS"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_AKMCSSobol"))
-    load(paste0(folder,"/AKMCS/seed",seed,"/T_check_AKMCS"))
-    # load(paste0(folder,"/AKMCS/seed",seed,"/S_AKMCS"))
-    # load(paste0(folder,"/AKMCS/seed",seed,"/Sobol_AKMCS_convergesize"))
-    # Sobol_AKMCS_convergesize<- S$C
-    
-    # Calculation of the computational time in each scenario
-    # Sensitivity analysis time + model evaluation adjusted time + emulation time
-    for (j in 1:length(tested_eval_time)) {
-      Time_BASS[i,j] <- sum(T_LHS_BASS) + sum(T_BASS)+ sum(T_pred_BASS) + tested_eval_time[j]*BASS_size + sum(T_BASSSobol) + sum(T_check_BASS)
-      Time_AKMCS[i,j] <- sum(T_AKMCS) + sum(T_pred_AKMCS) + tested_eval_time[j]*AKMCS_size + sum(T_AKMCSSobol) + sum(T_check_AKMCS)
-    }
-  }
-  
   save(Time_BASS,file=paste0("./Ranking_Data/Time_BASS_node",node))
   save(Time_Kriging,file=paste0("./Ranking_Data/Time_Kriging_node",node))
   save(Time_AKMCS,file=paste0("./Ranking_Data/Time_AKMCS_node",node))

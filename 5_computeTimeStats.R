@@ -7,12 +7,10 @@
 rm(list = ls())
 graphics.off()
 
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+
 source("0_library.R")
 source("extra_functions.R")
-
-# Load the required package for plotting
-library(plot.matrix)
-library(RColorBrewer)
 
 # Tested dimension, method names, and evaluation time
 tested_D_num <- c(2,5,10,15,20,30)
@@ -22,7 +20,7 @@ tested_eval_time <- c(0.001,0.01,0.1,1,10,60,600,3600,3600*10)
 # Label of evaluation time
 eval_time_lab <- c("1ms","10ms","0.1s","1s","10s","1min","10min","1h","10h")
 
-n_nodes<- 5
+n_nodes<- 4
 
 ################################################################################
 
@@ -95,17 +93,17 @@ for(i in 1:length(tested_D)){
     Var_Time_Sobol[i,j]<- var(Time_Sobol_arr[i,j,])
     
     Mean_Time_BASS[i,j]<- mean(Time_BASS_arr[i,j,])
-    Min_Time_BASS[i,j]<- min(Time_BASS_arr[i,j,])
+    Min_Time_BASS[i,j]<- min(Time_BASS_arr[i,j,],na.rm=TRUE)
     Max_Time_BASS[i,j]<- max(Time_BASS_arr[i,j,])
     Var_Time_BASS[i,j]<- var(Time_BASS_arr[i,j,])
     
     Mean_Time_Kriging[i,j]<- mean(Time_Kriging_arr[i,j,])
-    Min_Time_Kriging[i,j]<- min(Time_Kriging_arr[i,j,])
+    Min_Time_Kriging[i,j]<- min(Time_Kriging_arr[i,j,],na.rm=TRUE)
     Max_Time_Kriging[i,j]<- max(Time_Kriging_arr[i,j,])
     Var_Time_Kriging[i,j]<- var(Time_Kriging_arr[i,j,])
     
     Mean_Time_AKMCS[i,j]<- mean(Time_AKMCS_arr[i,j,])
-    Min_Time_AKMCS[i,j]<- min(Time_AKMCS_arr[i,j,])
+    Min_Time_AKMCS[i,j]<- min(Time_AKMCS_arr[i,j,],na.rm=TRUE)
     Max_Time_AKMCS[i,j]<- max(Time_AKMCS_arr[i,j,])
     Var_Time_AKMCS[i,j]<- var(Time_AKMCS_arr[i,j,])
   }
