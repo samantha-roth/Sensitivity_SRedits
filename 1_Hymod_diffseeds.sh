@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-#SBATCH --job-name=1_Hymod_diffseeds
-#SBATCH --output=1_Hymod_diffseeds_output.%j.out
+#SBATCH --job-name=1Hymod_diffseeds
+#SBATCH --output=1Hymod_diffseeds_output.%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=5
-#SBATCH --mem=10GB
+#SBATCH --mem=25GB
 #SBATCH --time=48:00:00
 #SBATCH --constraint=sc
 #SBATCH --account=pches
 #SBATCH --partition=sla-prio
-#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT_80,TIME_LIMIT_90
-#SBATCH --mail-user=svr5482@psu.edu
+#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT_90
+#SBATCH --mail-user=svr5482@psu.edu  
 
 echo "Job started on `hostname` at `date`"
 
