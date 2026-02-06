@@ -1,18 +1,18 @@
 rm(list=ls())
 graphics.off()
 
-source("0_libraryHymod.R")
+source("0_librarySACSMA10par.R")
 source("extra_functions.R")
 
 # Tested dimension, method names, and evaluation time
-tested_D_num <- c(5)
-tested_D <- c("5D")
+tested_D_num <- c(10)
+tested_D <- c("10D")
 tested_M <- c("Kriging","AKMCS","BASS")
 tested_eval_time <- c(0.001,0.01,0.1,1,10,60,600,3600,3600*10)
 # Label of evaluation time
 eval_time_lab <- c("1ms","10ms","0.1s","1s","10s","1min","10min","1h","10h")
 
-folder<- paste0(folderpath,"Hymod")
+folder<- paste0(folderpath,"SacSma10")
 
 load(paste0(folder,"/Summary_Time_Sobol"))
 
@@ -52,7 +52,7 @@ colnames(textMat_maxSobol) <- eval_time_lab
 
 save(textMat_maxSobol,file=paste0(folder,"/textMat_maxSobol"))
 print(textMat_maxSobol)
-#Sobol is always fastest for times less than or equal to 1s
+#Sobol is always fastest for times less than or equal to 10ms
 
 Sobol_inds<- which(textMat_maxSobol=="Sobol")
 #-------------------------------------------------------------
@@ -139,7 +139,7 @@ colnames(textMat_maxAKMCS) <- eval_time_lab
 
 save(textMat_maxAKMCS,file=paste0(folder,"/textMat_maxAKMCS"))
 print(textMat_maxAKMCS)
-#AKMCS is never uniformly fastest
+#AKMCS is uniformly fastest when model run time >= 10s
 
 AKMCS_inds<- which(textMat_maxAKMCS=="AKMCS")
 

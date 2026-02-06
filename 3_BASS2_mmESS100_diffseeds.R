@@ -143,7 +143,7 @@ foreach(node = 1:4)%dopar%{
     }
     # otherwise perform sensitivity analysis and record the time
     else{
-      check_T_out<- check_T_convergence(x=x,y=y,mod_list=mod_list, burn_size=burn_size, nthin=nthin, nwant_T=nwant_T)
+      check_T_out<- check_T_convergence(mod_list=mod_list, burn_size=burn_size, nthin=nthin, nwant_T=nwant_T)
       
       mod_list<- check_T_out[[1]]
       S_BASS_list<- check_T_out[[2]]

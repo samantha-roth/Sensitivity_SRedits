@@ -1,26 +1,27 @@
 rm(list=ls())
 graphics.off()
 
-source("0_libraryHymod.R")
-source("extra_functions.R")
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+
+source("0_libraryPoly.R")
+source("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/extra_functions.R")
 
 # Tested dimension, method names, and evaluation time
-tested_D_num <- c(5)
-tested_D <- c("5D")
+tested_D_num <- c(2,5,10,15,20,30)
+tested_D <- c("2D","5D","10D","15D","20D","30D")
 tested_M <- c("Kriging","AKMCS","BASS")
 tested_eval_time <- c(0.001,0.01,0.1,1,10,60,600,3600,3600*10)
 # Label of evaluation time
 eval_time_lab <- c("1ms","10ms","0.1s","1s","10s","1min","10min","1h","10h")
 
-folder<- paste0(folderpath,"Hymod")
 
-load(paste0(folder,"/Summary_Time_Sobol"))
+load(paste0("./Ranking_Data/Summary_Time_Sobol"))
 
-load(paste0(folder,"/Summary_Time_BASS"))
+load(paste0("./Ranking_Data/Summary_Time_BASS"))
 
-load(paste0(folder,"/Summary_Time_Kriging"))
+load(paste0("./Ranking_Data/Summary_Time_Kriging"))
 
-load(paste0(folder,"/Summary_Time_AKMCS"))
+load(paste0("./Ranking_Data/Summary_Time_AKMCS"))
 
 #is there any combo of model run time and model dimension 
 #for which Sobol is always fastest across all seeds?
@@ -50,11 +51,13 @@ for (i in 1:(length(tested_D))){
 rownames(textMat_maxSobol) <- tested_D_num
 colnames(textMat_maxSobol) <- eval_time_lab
 
-save(textMat_maxSobol,file=paste0(folder,"/textMat_maxSobol"))
+save(textMat_maxSobol,file="./Ranking_Data/textMat_maxSobol")
 print(textMat_maxSobol)
-#Sobol is always fastest for times less than or equal to 1s
+#Sobol is uniformly fastest when run time is 1ms and input dimension is between 2D and 20D
+#and when run time is 10ms and input dimension is between 2D and 20D
 
 Sobol_inds<- which(textMat_maxSobol=="Sobol")
+
 #-------------------------------------------------------------
 # Compare the max BASS time to the min of all other approaches
 Mat_maxBASS <- Max_Time_BASS
@@ -79,9 +82,12 @@ for (i in 1:(length(tested_D))){
 rownames(textMat_maxBASS) <- tested_D_num
 colnames(textMat_maxBASS) <- eval_time_lab
 
-save(textMat_maxBASS,file=paste0(folder,"/textMat_maxBASS"))
+save(textMat_maxBASS,file="./Ranking_Data/textMat_maxBASS")
 print(textMat_maxBASS)
-#BASS is never always fastest 
+#BASS is uniformly fastest for 10D inputs when the model run time is between 0.1s and 1min
+#and for 15D inputs when the model run time is between 1s and 10min
+#and for 20D inputs when the model run time is between 0.1s and 10min
+#and for 30D inputs when the model run time is between 1ms and 10s
 
 BASS_inds<- which(textMat_maxBASS=="BASS")
 #-------------------------------------------------------------
@@ -108,9 +114,9 @@ for (i in 1:(length(tested_D))){
 rownames(textMat_maxKriging) <- tested_D_num
 colnames(textMat_maxKriging) <- eval_time_lab
 
-save(textMat_maxKriging,file=paste0(folder,"/textMat_maxKriging"))
+save(textMat_maxKriging,file="./Ranking_Data/textMat_maxKriging")
 print(textMat_maxKriging)
-#Kriging is never uniformly fastest
+#Kriging is uniformly fastest nowhere
 
 Kriging_inds<- which(textMat_maxKriging=="Kriging")
 #-------------------------------------------------------------
@@ -137,9 +143,10 @@ for (i in 1:(length(tested_D))){
 rownames(textMat_maxAKMCS) <- tested_D_num
 colnames(textMat_maxAKMCS) <- eval_time_lab
 
-save(textMat_maxAKMCS,file=paste0(folder,"/textMat_maxAKMCS"))
+save(textMat_maxAKMCS,file="./Ranking_Data/textMat_maxAKMCS")
 print(textMat_maxAKMCS)
-#AKMCS is never uniformly fastest
+#AKMCS is uniformly fastest for 2D input with 0.1s to 10s model run time
+#and for 10hr runtime with input dimensions of 15D to 30D
 
 AKMCS_inds<- which(textMat_maxAKMCS=="AKMCS")
 
@@ -149,8 +156,7 @@ AKMCS_inds<- which(textMat_maxAKMCS=="AKMCS")
 textMat_uniformBest<- matrix(NA,nrow=nrow(Mat_maxSobol),ncol=ncol(Mat_maxSobol))
 textMat_uniformBest[AKMCS_inds]<- "AKMCS"
 textMat_uniformBest[BASS_inds]<- "BASS"
-textMat_uniformBest[Kriging_inds]<- "Kriging"
 textMat_uniformBest[Sobol_inds]<- "Sobol"
 
-save(textMat_uniformBest,file=paste0(folder,"/textMat_uniformBest"))
+save(textMat_uniformBest,file="./Ranking_Data/textMat_uniformBest")
 print(textMat_uniformBest)
