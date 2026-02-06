@@ -8,9 +8,7 @@ rm(list = ls())
 graphics.off()
 
 setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
-
 source("0_librarySACSMA10par.R")
-
 print("1_SobolSACSMA10.R")
 
 T_Sobol<- vector()
@@ -40,8 +38,7 @@ for (m in 1:length(tot_size)){
   
   # if N < 2, increase size directly
   if (N >= 2){
-    print(tot_size[m])
-    
+
     # Sensitivity analysis time
     sens_start.time<-Sys.time()
     
@@ -53,11 +50,7 @@ for (m in 1:length(tot_size)){
     
     # For 2 hydro models, need to change the input ranges accordingly
     mat <- Mapping(mat,Range)
-    
-    mat<- cbind(mat[,1:2],fix_vals[1],
-                mat[,3:5],fix_vals[2],
-                mat[,6:9],fix_vals[3],
-                mat[,10],
+    mat<- cbind(mat[,1:2],fix_vals[1],mat[,3:5],fix_vals[2],mat[,6:9],fix_vals[3],mat[,10],
                 known_pars[1],known_pars[2],known_pars[3])
     X <- split(t(mat), rep(1:dim(mat)[1], each = d+length(known_pars)+length(pars_fix)))
     
@@ -118,6 +111,7 @@ for (m in 1:length(tot_size)){
       if (quantile(Rho_all,probs = 0.95, na.rm = TRUE) < 1){
         avg_eval_time<- mean(all_eval_times)
         save(avg_eval_time,file = paste0(folder,"/avg_eval_time"))
+        print(paste0("Sobol convergence size: ",Sobol_convergesize))
         break
       }
     }

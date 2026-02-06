@@ -1,8 +1,7 @@
 library(sensobol)
 sobol_indices_boot <- function (matrices = c("A", "B", "AB"), Y, N, params, first = "saltelli", 
           total = "jansen", order = "first", boot = FALSE, R = NULL, 
-          parallel = "no", ncpus = 1, conf = 0.95, type = "norm") 
-{
+          parallel = "no", ncpus = 1, conf = 0.95, type = "norm") {
   if (boot == FALSE & is.null(R) == FALSE | boot == TRUE & 
       is.null(R) == TRUE) {
     stop("Bootstrapping requires boot = TRUE and an integer in R")
