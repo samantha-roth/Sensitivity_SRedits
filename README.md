@@ -1,12 +1,14 @@
 The R packages in the format "`package` (version)" required for this analysis arerequired for this analysis are `sensobol` (1.1.5), `lhs` (1.2.0), `BASS` (1.3.1), `GPfit` (1.0-8), and `mcmcse` (1.5-0). 
 
-Before installing the necessary R packages, we recommend updating R to version 4.4.2 and deleting any dependences for any of these R packages that were installed on an earlier version of R.
+Before installing the necessary R packages, we recommend updating R to version 4.4.2 and deleting any dependences for any of these R packages that were installed on an earlier version of R. This workflow has been tested using The Pennsylvania State University's ROAR high-performance computing system.
+
+This analysis contains four options of computer models: Sobol's G function, a simple polynomial function, Hymod, and SAC-SMA. This analysis also contains six options of numbers of model parameters (2, 5, 10, 15, 20, 30) for the G function and the polynomial. When the number of parameters is 15 or more, obtaining sensitivity analysis results for the G function may take a very long time. We recommend using a high-performance computing system to run these codes.
 
 To run the analysis, simply follow the scripts based on their beginning numbers:
 
 0_library.R is the script that loads all the packages, functions and parameters. You may change the test function to use or the testing dimensions or the sample sizes in this script. (you also define the working directory here, essentially you only to make changes in this script)
 
-1_ through 4_ scripts are the analysis of the four sensitivity analysis methods. They record the convergence size and sensitivity indices under different sample sizes.
+1_ through 4_ scripts are the analysis of the four sensitivity analysis methods. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
 5_ scripts compute quantities for comparison of sensitivity analysis approaches based on their outputs. Run these in the following order, where only 1 and 2 are needed to generate FastestMeanTime.pdf.
 1. Scripts starting with 5_computeTotalTimes
