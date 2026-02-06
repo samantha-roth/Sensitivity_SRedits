@@ -6,7 +6,7 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 ## Description of scripts
 
-Scripts marked with (NE) next to them are not essential to reproduce published results but may be informative for one's own analysis.
+Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
 1. `0_library.R` (`0_libraryHymod.R`, `0_librarySACSMA10par`, `polynomial/0_libraryPoly.R`) is the script that loads all the packages and defines the test models and the numbers of parameters to test. Edit this script to define the working directory. This script is called by the other scripts that perform sensitivity analysis and does not have to be run on its own. `0_library.R` corresponds to Sobol's G function, `0_libraryHymod.R` corresponds to Hymod,`0_librarySACSMA10par.R` corresponds to SACSMA, and `0_libraryPoly.R` in the `polynomial` folder corresponds to the polynomial function.
 
@@ -21,9 +21,7 @@ Scripts marked with (NE) next to them are not essential to reproduce published r
     * You do not need to wait until after running scripts that start with `5_computeTotalTimes` to run scripts starting with `5_getRankings`.
     * After running the scripts startings with `5_getRankings`, you can run the scripts starting with `5_getRho`. Scripts that start with `5_getRho` and end with `0.05` (NE) such as `5_getRho_SACSMA10_0.05.R` remove parameters with total sensitivity indices less than 0.05 from the calculations to consider how removing the effects of unimportant parameters changes results. We find results are practically the same.
 
-6_ scripts compare sensitivity analysis approaches using the computed quantities.
-- Scripts starting with 6_howBetterIsBest should be run before those starting with 6_whatIsBetterNoBest.
-- To generate FastestMeanTime.pdf, run 6_bestFor30D.R
+4. Scripts starting with 6_ compare sensitivity analysis approaches using the computed quantities.
 
 7_ scripts generate plots to compare sensitivity analysis approaches.
 - To generate FastestMeanTime.pdf, run 7_FastestMeanTimeFig.R
