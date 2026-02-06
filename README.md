@@ -8,12 +8,12 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 1. `0_library.R` (`0_libraryHymod.R`, `0_librarySACSMA10par`, `polynomial/0_libraryPoly.R`) is the script that loads all the packages and defines the test models and the numbers of parameters to test. Edit this script to define the working directory. This script is called by the other scripts that perform sensitivity analysis and does not have to be run on its own. `0_library.R` corresponds to Sobol's G function, `0_libraryHymod.R` corresponds to Hymod,`0_librarySACSMA10par.R` corresponds to SACSMA, and `0_libraryPoly.R` in the `polynomial` folder corresponds to the polynomial function.
 
-1_ through 4_ scripts are the analysis of the four sensitivity analysis methods. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+2. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
-5_ scripts compute quantities for comparison of sensitivity analysis approaches based on their outputs. Run these in the following order, where only 1 and 2 are needed to generate FastestMeanTime.pdf.
-1. Scripts starting with 5_computeTotalTimes
-2. Scripts starting with 5_computeTimeStats
-3. Scripts starting with 5_getBestForAllSeeds
+3. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs. Run these in the following order.
+   a. Scripts starting with 5_computeTotalTimes
+   b. Scripts starting with 5_computeTimeStats
+   c. Scripts starting with 5_getBestForAllSeeds
 
 6_ scripts compare sensitivity analysis approaches using the computed quantities.
 - Scripts starting with 6_howBetterIsBest should be run before those starting with 6_whatIsBetterNoBest.
