@@ -29,7 +29,12 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * Scripts starting with `2` perform Sobol' with a Kriging emulator.
     * Scripts starting with `3` perform Sobol' with a BASS emulator.
     * Scripts starting with `4` perform Sobol' with a Kriging emulator fit using adaptive sampling (AKMCS).
-    * We submit shell scripts ending in `.sh` and `.sbatch` files run the corresponding R script. Appropriate specifications will vary by HPC system. We give examples of scripts used in this analysis in `1.sh`, `2_Hymod.sh`, `4_4_diffseeds.sh`, `3_SACSMA10_mmESS100_diffseeds.sbatch`.
+    * Scripts containing `NUMBERD` set the number of parameters to be NUMBER.
+    * Scripts containing `diffseeds` vary the seed to see how results vary.
+    * Scripts containing `SACSMA10` use the SACSMA model with 10 parameters.
+    * Scripts containing `Hymod` use the Hymod model with 5 parameters.
+    * Scripts containing `ptPT` are the PT continuation of an analysis that was cut off.
+    * We submit shell scripts ending in `.sh` and `.sbatch` files run the corresponding R script. Appropriate specifications will vary by HPC system. We give examples of scripts used in this analysis in `1.sh`, `2_Hymod.sh`, `4_15D_diffseeds.sh`, `3_SACSMA10_mmESS100_diffseeds.sbatch`.
 
 2. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
     * Run `5_doesItFinish.R` (NE) to check which approaches finished running for which models and numbers of parameters.
