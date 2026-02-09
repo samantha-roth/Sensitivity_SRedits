@@ -100,7 +100,7 @@ Timescale_Diff[nrow(Timescale_Diff),]<- "NA"
 cols<-c("blue","turquoise","green","yellow","orange","red","brown","black","white")
 brks<-c("second","minute","hour","day","week","month","year","decade","NA")
 
-pdf(file = "./Sam_Figures/Figure_Timescale_MaxMean-MinMean.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/Fig3a_Timescale_MaxMean-MinMean.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(Timescale_Diff[nrow(Timescale_Diff):1, ],breaks = brks,
      xlab="Time of single run",ylab="Number of input parameters",col=cols,
