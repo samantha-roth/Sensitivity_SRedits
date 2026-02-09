@@ -3,12 +3,12 @@ rm(list = ls())
 graphics.off()
 
 # Set a working directory, please set it to your own working folder when testing
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
 
 # Load the required packages
-source("0_library.R")
+source("0_libraryPoly.R")
 
-print("2_20D.R")
+print("2_30D.R")
 
 #necessary packages for parallelization
 library("foreach")
@@ -22,10 +22,10 @@ registerDoParallel(cl)
 #foreach executes the code within the brackets separately on each node
 foreach(node = 1:4)%dopar%{ 
   
-  source("0_library.R")
+  source("0_libraryPoly.R")
   
   # Define the test model in each dimension, build the Kriging emulator and perform the Sobol analysis
-  k=5
+  k=6
   
   seed<- node*k
   set.seed(seed)

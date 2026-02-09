@@ -12,7 +12,7 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/pol
 # Load the required packages
 source("0_libraryPoly.R")
 
-print("4_AKMCS4.R")
+print("4_15D.R")
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
 k=4

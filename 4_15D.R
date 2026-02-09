@@ -8,7 +8,7 @@ graphics.off()
 
 source("0_library.R")
 
-print("4_.R")
+print("4_15D.R")
 
 set.seed(17)
 
@@ -69,6 +69,14 @@ T_pred_AKMCS<- c(T_pred_AKMCS,pred_time)
 # U is the learning function, which is simply the standard error here
 U <- sqrt(a$MSE)
 print(paste0("sample size =",dim(x)[1], "max(U) =",max(U),"range = ",(max(a$Y_hat)-min(a$Y_hat))/20))
+
+save(AKMCS_size,file = paste0(folder,"/AKMCS_size"))
+save(AKMCS_size_vec,file = paste0(folder,"/AKMCS_size_vec"))
+save(T_AKMCS,file = paste0(folder,"/T_AKMCS"))
+save(T_model_AKMCS,file = paste0(folder,"/T_model_AKMCS"))
+save(T_pred_AKMCS,file = paste0(folder,"/T_pred_AKMCS"))
+save(x,file = paste0(folder,"/x"))
+save(a,file = paste0(folder,"/a"))
 
 # End the loop if the stopping criterion is fulfilled
 # Stopping criterion: all the remaining samples have standard errors larger than 1
