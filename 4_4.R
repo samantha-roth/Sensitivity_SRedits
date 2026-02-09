@@ -8,7 +8,7 @@ graphics.off()
 
 source("0_library.R")
 
-print("4_AKMCS4_SR.R")
+print("4_.R")
 
 set.seed(17)
 
