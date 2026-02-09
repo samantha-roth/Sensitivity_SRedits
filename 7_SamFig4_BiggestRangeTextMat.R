@@ -31,7 +31,7 @@ colnames(textMat_BiggestRange) <- eval_time_lab
 
 cols<-c("white","maroon","purple")
 
-pdf(file = "./Sam_Figures/BiggestRangeAcrossSeedsAndModels.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/Fig4_BiggestRangeAcrossSeedsAndModels.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(textMat_BiggestRange[nrow(textMat_BiggestRange):1, ],breaks = c("None","BASS","Sobol"),
      xlab="Time of single run",ylab="Number of input parameters",col=cols,
