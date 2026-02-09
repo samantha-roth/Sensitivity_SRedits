@@ -7,19 +7,31 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# # Set a working directory, please set it to your own working folder when testing
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+dir<- commandArgs(trailingOnly=TRUE)
+setwd(dir)
 
 source("0_libraryPoly.R")
 source("bass_mcmc_size.R")
 source("check_T_convergence.R")
 
-print("3_BASS6_mmESS100_node1.R")
+print("3_30D_diffseeds.R")
 
-# Define the model in each dimension and apply BASS method
-k=6
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
+
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
 
 #foreach executes the code within the brackets separately on each node
-node=1
+foreach(node = 1:3)%dopar%{ 
+  
+  # Define the model in each dimension and apply BASS method
+  k=6
   
   T_LHS_BASS<- vector()
   T_BASS<- vector()
@@ -147,4 +159,5 @@ node=1
     }
   }
   
+}
 

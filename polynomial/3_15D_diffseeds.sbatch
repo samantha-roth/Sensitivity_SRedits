@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#SBATCH --job-name=3_4_mmESS100_diffseeds
-#SBATCH --output=3_4_mmESS100_diffseeds_output.%j.out
+#SBATCH --job-name=3_15D_diffseeds
+#SBATCH --output=3_15D_diffseeds_output.%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=100GB
@@ -152,7 +152,7 @@ echo "**********************************************************************"
 
 # Now run the R script "Rscript 3_BASS_propmean.R"
 
-singularity exec instance://$PCHES_SINGULARITY_INSTANCE sh -c "Rscript -e \"source('3_BASS4_mmESS100_diffseeds.R')\""
+singularity exec instance://$PCHES_SINGULARITY_INSTANCE sh -c "Rscript -e \"source('3_15D_diffseeds.R')\""
 local_rc=$?
   
   echo " "

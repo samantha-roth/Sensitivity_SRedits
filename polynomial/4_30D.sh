@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#SBATCH --job-name=4_6
-#SBATCH --output=4_6_output.%j.out
+#SBATCH --job-name=4_30D
+#SBATCH --output=4_30D_output.%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=20GB
@@ -14,6 +14,6 @@ echo "Job started on `hostname` at `date`"
 
 module load r
 cd /storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial
-Rscript 4_AKMCS6.R
+Rscript 4_30D.R
 
 echo "Job Ended at `date`"
