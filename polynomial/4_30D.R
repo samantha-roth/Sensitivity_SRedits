@@ -6,13 +6,15 @@
 rm(list = ls())
 graphics.off()
 
-# Set a working directory, please set it to your own working folder when testing
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# # Set a working directory, please set it to your own working folder when testing
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+dir<- commandArgs(trailingOnly=TRUE)
+setwd(dir)
 
 # Load the required packages
 source("0_libraryPoly.R")
 
-print("4_AKMCS6.R")
+print("4_30D.R")
 
 # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
 k=6

@@ -8,11 +8,13 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+dir<- commandArgs(trailingOnly=TRUE)
+setwd(dir)
 
 source("0_libraryPoly.R")
 
-print("1_Sobol1-3.R") 
+print("1_2-10D.R") 
 
 T_Sobol<- vector()
 T_check_Sobol<- vector()
