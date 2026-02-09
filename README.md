@@ -15,6 +15,7 @@ This analysis contains four options of computer models: Sobol's G function, a si
 3. `sobol_indices_boot.R` is a function that allows bootstrapping using sensobol package.
 
 *Scripts to run during the analysis*
+
 Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
 1. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
@@ -44,8 +45,12 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
 *Scripts to run for additional checks*
 1. decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
 
-arnosubbiano.rda and SacSma_dataframe are the corresponding data required to run the two hydro models. 
+## Description of data
 
-The folder Ranking_Data includes all the required data. You may compare your running results with these data, but notice that the recorded sample sizes, running time and sensitivity indices won't be the same because of random seeds and different computational environments. However you should get similar figures (compare with the figures in New_Figures folder).
+1. `arnosubbiano.rda` contains data to run Hymod.
+2. `SacSma_dataframe` contains data to run SACSMA.
+3. The folder `Compare` contains the analysis results for comparison. Your results may vary if your computing environment differs from that used for the analysis or if you change the random seeds used.
 
+
+The folder Ranking_Data includes all the required data. 
 **Note that 2_, 3_ and 4_ scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
