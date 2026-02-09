@@ -22,7 +22,7 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
-1. R Scripts starting with `1` to `4` perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+1. R Scripts starting with `1` to `4` perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a `2`, `3`, or `4`, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
     * Scripts starting with `1` perform standard Sobol' with no emulator.
     * Scripts starting with `2` perform Sobol' with a Kriging emulator.
     * Scripts starting with `3` perform Sobol' with a BASS emulator.
