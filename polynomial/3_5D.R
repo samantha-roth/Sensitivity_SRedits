@@ -7,7 +7,9 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+dir<- commandArgs(trailingOnly=TRUE)
+setwd(dir)
 
 source("0_libraryPoly.R")
 source("bass_mcmc_size.R")
@@ -16,7 +18,7 @@ source("check_T_convergence.R")
 # Set a random seed
 set.seed(33)
 
-print("3_BASS2_mmESS100.R")
+print("3_5D.R")
 
 # Define the model in each dimension and apply BASS method
 k=2
