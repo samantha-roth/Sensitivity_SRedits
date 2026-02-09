@@ -27,7 +27,7 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * Scripts starting with `2` perform Sobol' with a Kriging emulator.
     * Scripts starting with `3` perform Sobol' with a BASS emulator.
     * Scripts starting with `4` perform Sobol' with a Kriging emulator fit using adaptive sampling (AKMCS).
-    * We submit shell scripts ending in `.sh` and `.sbatch` files run the corresponding R script.
+    * We submit shell scripts ending in `.sh` and `.sbatch` files run the corresponding R script. Appropriate specifications will vary by HPC system. We give examples of scripts used in this analysis in `1.sh`, `2_Hymod.sh`, `4_4_diffseeds.sh`, `3_SACSMA10_mmESS100_diffseeds.sbatch`.
 
 2. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
     * Run `5_doesItFinish.R` (NE) to check which approaches finished running for which models and numbers of parameters.
@@ -64,4 +64,4 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
    * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
    * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
 
-** For Sobol's G function, note that 2_, 3_ and 4_ scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
+** For Sobol's G function, note that `2`, `3` and `4` scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
