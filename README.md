@@ -22,7 +22,13 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
-1. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+1. R Scripts starting with `1_` to `4_` perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+    * Scripts starting with `1_Sobol` perform standard Sobol' with no emulator.
+    * Scripts starting with `2_Kriging` perform Sobol' with a Kriging emulator.
+    * Scripts starting with `3_BASS` perform Sobol' with a BASS emulator.
+    * Scripts starting with `4_AKMCS` perform Sobol' with a Kriging emulator fit using adaptive sampling (AKMCS).
+    * 
+    * We submit shell scripts ending in `.sh` and `.sbatch` files run the corresponding R script.
 
 2. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
     * Run `5_doesItFinish.R` (NE) to check which approaches finished running for which models and numbers of parameters.
@@ -55,7 +61,7 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
 1. `arnosubbiano.rda` contains data to run Hymod.
 2. `SacSma_dataframe` contains data to run SACSMA.
 3. The folder `Compare` contains the analysis results for comparison. Your results may vary if your computing environment differs from that used for the analysis or if you change the random seeds used. Within the `Compare` folder:
-   * `Sam_Figures` contains the final figures for comparison. Figures that appear in the manuscript have names starting with `FigFIGURENUMBER_` where FIGURENUMBER can be 2, 3a, 3b, 3c, 4, or 5. The figure in the graphical abstract is titled
+   * `Sam_Figures` contains the final figures for comparison. Figures that appear in the manuscript have names starting with `FigFIGURENUMBER_` where FIGURENUMBER can be 2, 3a, 3b, 3c, 4, or 5. The figure in the graphical abstract is titled `GraphicalAbstract_Recommendations.pdf`.
    * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
    * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
 
