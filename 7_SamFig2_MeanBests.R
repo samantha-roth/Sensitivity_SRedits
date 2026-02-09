@@ -31,7 +31,7 @@ colnames(text_meanBestAllMod) <- eval_time_lab
 #cols<-brewer.pal(n = 3, name = "Set3")
 cols<-c("white","orange","purple")
 
-pdf(file = "./Sam_Figures/MeanFastestAcrossSeedsForAllModels.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/Fig2_MeanFastestAcrossSeedsForAllModels.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(text_meanBestAllMod[nrow(text_meanBestAllMod):1, ],breaks = c("None","AKMCS","Sobol"),
      xlab="Time of single run",ylab="Number of input parameters",col=cols,
