@@ -46,7 +46,7 @@ textMat_SobolMaxEnough_All[4,4]<- "No"
 # Color palette
 cols<-c("purple","white")
 
-pdf(file = "./Sam_Figures/SobolMaxEnough_AllModels.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/Fig5_SobolMaxEnough_AllModels.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(textMat_SobolMaxEnough_All[nrow(textMat_SobolMaxEnough_All):1, ],breaks = c("Yes","No"),
      xlab="Model run time",ylab="Number of model parameters",col=cols,
