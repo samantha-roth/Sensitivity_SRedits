@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#SBATCH --job-name=4_4_diffseeds
-#SBATCH --output=4_4_diffseeds_output.%j.out
+#SBATCH --job-name=4_15D_diffseeds
+#SBATCH --output=4_15D_diffseeds_output.%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=5
 #SBATCH --mem=50GB
@@ -15,6 +15,6 @@ echo "Job started on `hostname` at `date`"
 
 module load r
 cd /storage/group/pches/default/users/svr5482/Sensitivity_paper_revision
-Rscript 4_4_diffseeds.R
+Rscript 4_15D_diffseeds.R
 
 echo "Job Ended at `date`"

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#SBATCH --job-name=1
-#SBATCH --output=1_output.%j.out
+#SBATCH --job-name=1_2-10D
+#SBATCH --output=1_2-10D_output.%j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=20GB
@@ -15,6 +15,6 @@ echo "Job started on `hostname` at `date`"
 
 module load r
 cd /storage/group/pches/default/users/svr5482/Sensitivity_paper_revision
-Rscript 1.R
+Rscript 1_2-10D.R
 
 echo "Job Ended at `date`"

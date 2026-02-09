@@ -152,7 +152,7 @@ echo "**********************************************************************"
 
 # Now run the R script "Rscript 3_BASS_propmean.R"
 
-singularity exec instance://$PCHES_SINGULARITY_INSTANCE sh -c "Rscript -e \"source('3_BASSHymod_mmESS100.R')\""
+singularity exec instance://$PCHES_SINGULARITY_INSTANCE sh -c "Rscript -e \"source('3_Hymod_mmESS100.R')\""
 local_rc=$?
   
   echo " "
