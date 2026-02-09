@@ -18,7 +18,7 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 5. `check_T_convergence.R` checks convergence of parameter rankings for the BASS emulator and adds more steps to the Markov chain until convergence has been reached.
 
-*Scripts to run before the analysis* install_packages.R
+*Scripts to run before the analysis* `install_packages.R`
 
 *Scripts to run during the analysis*
 
