@@ -14,6 +14,10 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 3. `sobol_indices_boot.R` is a function that allows bootstrapping using sensobol package.
 
+4. `bass_mcmc_size.R` fits the BASS emulator and ensures the Markov chain is run for long enough to obtain a satisfactory multivariate effective sample size.
+
+5. `check_T_convergence.R` checks convergence of parameter rankings for the BASS emulator and adds more steps to the Markov chain until convergence has been reached.
+
 *Scripts to run during the analysis*
 
 Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
@@ -45,7 +49,7 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
 *Scripts to run for additional checks*
 1. decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
 
-## Description of data
+## Description of data and figures
 
 1. `arnosubbiano.rda` contains data to run Hymod.
 2. `SacSma_dataframe` contains data to run SACSMA.
@@ -54,4 +58,4 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
    * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
    * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
 
-**Note that 2_, 3_ and 4_ scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
+** For Sobol's G function, note that 2_, 3_ and 4_ scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
