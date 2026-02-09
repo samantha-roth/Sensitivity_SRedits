@@ -1,4 +1,4 @@
-#code to generate new figure 3c Hymod and SACSMA
+#code to generate figure 3c Hymod and SACSMA
 
 rm(list=ls())
 graphics.off()
@@ -103,7 +103,7 @@ Timescale_Diff_Hymod_SACSMA10<- rbind(Timescale_Diff_Hymod,Timescale_Diff_SACSMA
 cols<-c("blue","turquoise","green","yellow","orange","red","brown","black","white")
 brks<-c("second","minute","hour","day","week","month","year","decade","NA")
 
-pdf(file = "./Sam_Figures/Figure_Timescale_Diff_Hymod_SACSMA10.pdf",width = 12,height = 3.5)
+pdf(file = "./Sam_Figures/Fig3c_Timescale_Diff_Hymod_SACSMA10.pdf",width = 12,height = 3.5)
 par(mar=c(5,5,2.6,6))
 plot(Timescale_Diff_Hymod_SACSMA10[nrow(Timescale_Diff_Hymod_SACSMA10):1, ],breaks = brks,
      xlab="Time of single run",ylab="Number of parameters",col=cols,
