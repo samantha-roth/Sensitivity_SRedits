@@ -6,12 +6,16 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 ## Description of scripts
 
-**Scripts that are called during the analysis
-Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
+*Scripts to call during the analysis*
 
 1. `0_library.R` (`0_libraryHymod.R`, `0_librarySACSMA10par`, `polynomial/0_libraryPoly.R`) is the script that loads all the packages and defines the test models and the numbers of parameters to test. Edit this script to define the working directory. This script is called by the other scripts that perform sensitivity analysis and does not have to be run on its own. `0_library.R` corresponds to Sobol's G function, `0_libraryHymod.R` corresponds to Hymod,`0_librarySACSMA10par.R` corresponds to SACSMA, and `0_libraryPoly.R` in the `polynomial` folder corresponds to the polynomial function.
 
-**Scripts that must be run during the analysis
+2. `Hymod.R` and `sacSma.R` contain code to run the two hydrological models.
+
+3. `sobol_indices_boot.R` is a function that allows bootstrapping using sensobol package.
+
+*Scripts to run during the analysis*
+Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
 1. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
 
@@ -37,10 +41,10 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * `7_SamFig5_SobolEnough.R` produces Figure 5 in the manuscript which shows whether standard Sobol' is fast enough to justify not using an emulation-based approach.
     * Scripts starting with `7_SamFigSupplement` produce parts a, b, and c of the figure in the supplementary material which shows how long Sobol' sensitivity analysis takes using the fastest approach for (a) the G function, (b) the polynomial, (c) Hymod, and (c) SACSMA.
 
+*Scripts to run for additional checks*
+1. decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
 
-decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
-
-Hymod.R and sacSma.R are the two hydro models. arnosubbiano.rda and SacSma_dataframe are the corresponding data required to run the two hydro models. sobol_indices_boot.R is a function that allows bootstrapping using sensobol package.
+arnosubbiano.rda and SacSma_dataframe are the corresponding data required to run the two hydro models. 
 
 The folder Ranking_Data includes all the required data. You may compare your running results with these data, but notice that the recorded sample sizes, running time and sensitivity indices won't be the same because of random seeds and different computational environments. However you should get similar figures (compare with the figures in New_Figures folder).
 
