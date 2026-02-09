@@ -1,4 +1,4 @@
-#code to generate new figure 3 for the polynomial function
+#code to generate figure 3b for the polynomial function
 
 rm(list=ls())
 graphics.off()
@@ -52,7 +52,7 @@ colnames(Timescale_Diff) <- eval_time_lab
 cols<-c("blue","turquoise","green","yellow","orange","red","brown","black","white")
 brks<-c("second","minute","hour","day","week","month","year","decade","NA")
 
-pdf(file = "./Sam_Figures/Figure_Timescale_MaxMean-MinMean_Poly.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/Fig3b_Timescale_MaxMean-MinMean_Poly.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(Timescale_Diff[nrow(Timescale_Diff):1, ],breaks = brks,
      xlab="Time of single run",ylab="Number of input parameters",col=cols,

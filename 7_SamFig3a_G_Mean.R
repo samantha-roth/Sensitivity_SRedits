@@ -1,4 +1,4 @@
-#code to generate new figure 3 for Sobol's G function
+#code to generate figure 3a for Sobol's G function
 
 rm(list=ls())
 graphics.off()
