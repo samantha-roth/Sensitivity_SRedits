@@ -6,13 +6,16 @@ This analysis contains four options of computer models: Sobol's G function, a si
 
 ## Description of scripts
 
+**Scripts that are called during the analysis
 Scripts marked with (NE) next to them are not essential to run to reproduce published results but may be informative for one's own analysis.
 
 1. `0_library.R` (`0_libraryHymod.R`, `0_librarySACSMA10par`, `polynomial/0_libraryPoly.R`) is the script that loads all the packages and defines the test models and the numbers of parameters to test. Edit this script to define the working directory. This script is called by the other scripts that perform sensitivity analysis and does not have to be run on its own. `0_library.R` corresponds to Sobol's G function, `0_libraryHymod.R` corresponds to Hymod,`0_librarySACSMA10par.R` corresponds to SACSMA, and `0_libraryPoly.R` in the `polynomial` folder corresponds to the polynomial function.
 
-2. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+**Scripts that must be run during the analysis
 
-3. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
+1. Scripts starting with 1_ to 4_ perform Sobol' sensitivity sensitivity analysis. They record the first, second, and total order sensitivity indices for all parameters. They also record the parameter rankings and the number of samples from the model (or emulator) needed for the rankings to converge. For the emulation-based approaches, which start with a 2, 3, or 4, they also record the amount of training data needed to fit the emulator. Finally, they record the amount of compute time needed for each step in the process.
+
+2. Scripts starting with 5_ compute quantities to compare the sensitivity analysis approaches based on their outputs.
     * Run `5_doesItFinish.R` (NE) to check which approaches finished running for which models and numbers of parameters.
     * Run `5_howLongTilNoFinish.R` (NE) to check the amount of compute time used when sensitivity analysis was never finished due to computational constraints.
     * Run scripts starting with the following in the following order:`5_computeTotalTimes` then `5_computeTimeStats`.
@@ -22,21 +25,18 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * You do not need to wait until after running scripts that start with `5_computeTotalTimes` to run scripts starting with `5_getRankings`.
     * After running the scripts startings with `5_getRankings`, you can run the scripts starting with `5_getRho`. Scripts that start with `5_getRho` and end with `0.05` (NE) such as `5_getRho_SACSMA10_0.05.R` remove parameters with total sensitivity indices less than 0.05 from the calculations to consider how removing the effects of unimportant parameters changes results. We find results are practically the same.
 
-4. Scripts starting with 6_ compare sensitivity analysis approaches using the computed quantities.
+3. Scripts starting with 6_ compare sensitivity analysis approaches using the computed quantities.
     * Scripts starting with `6_compareMeanFastestToSobol` compare how much time is needed on average by the mean fastest approach to both the mean and max standard Sobol' times.
     * `6_whereSobolEnoughAllModels.R` identifies for which combinations of model run time and number of parameters, Sobol' is fast enough for computer models considered.
     * `6_compareRhosAcrossModels.R` and `6_compareRhosAcrossModels_0.05.R` (NE) compare how well the rankings produced by each of the emulation-based approaches match the rankings given by standard Sobol'.
 
-5. Scripts starting with 7_ generate plots to compare sensitivity analysis approaches.
+4. Scripts starting with 7_ generate plots to compare sensitivity analysis approaches.
     * `7_SamFig2_MeanBests.R` produces Figure 2 in the manuscript which shows for what model run times and numbers of model runs there is a fastest approach across all models.
     * Scripts starting with `7_SamFig3` produce parts a, b, and c of Figure 3 in the manuscript. `7_SamFig3_G_Mean.R` produces part a; `7_SamFig3_Poly_Mean.R` produces part b, and `7_SamFig3_Hymod_SACSMA10_Mean.R` produces part c. These figures show how much time using the fastest approach saves on average compared to the slowest approach for each model.
     * `7_SamFig4_BiggestRangeTextMat.R` produces Figure 4 in the manuscript which shows which approach has the most variable computational needs across all models and seeds.
     * `7_SamFig5_SobolEnough.R` produces Figure 5 in the manuscript which shows whether standard Sobol' is fast enough to justify not using an emulation-based approach.
     * Scripts starting with `7_SamFigSupplement` produce parts a, b, and c of the figure in the supplementary material which shows how long Sobol' sensitivity analysis takes using the fastest approach for (a) the G function, (b) the polynomial, (c) Hymod, and (c) SACSMA.
 
-10_Timescales.R generates plots that show the timescale needed for each combination of model run time and model input dimension. There is one plot per sensitivity analysis method.
-
-checking_SA_outputs.R provides checks to make sure sensitivity analysis outputs have appropriate dimensions and values.
 
 decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
 
