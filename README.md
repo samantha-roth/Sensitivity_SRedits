@@ -49,8 +49,9 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
 
 1. `arnosubbiano.rda` contains data to run Hymod.
 2. `SacSma_dataframe` contains data to run SACSMA.
-3. The folder `Compare` contains the analysis results for comparison. Your results may vary if your computing environment differs from that used for the analysis or if you change the random seeds used.
+3. The folder `Compare` contains the analysis results for comparison. Your results may vary if your computing environment differs from that used for the analysis or if you change the random seeds used. Within the `Compare` folder:
+   * `Sam_Figures` contains the final figures for comparison. RENAME FIGURES TO CORRESPOND TO FIGURE NUMBER
+   * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
+   * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
 
-
-The folder Ranking_Data includes all the required data. 
 **Note that 2_, 3_ and 4_ scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
