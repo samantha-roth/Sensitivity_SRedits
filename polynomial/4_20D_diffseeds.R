@@ -12,12 +12,21 @@ setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/pol
 # Load the required packages
 source("0_libraryPoly.R")
 
-print("4_AKMCS6_node2.R")
+print("4_20D_diffseeds.R")
 
-node=2
+#necessary packages for parallelization
+library("foreach")
+library("doParallel")
 
-# Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
-for(k in 1:3){
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) # -1 not to overload system
+registerDoParallel(cl)
+
+#foreach executes the code within the brackets separately on each node
+foreach(node = 1:3)%dopar%{ 
+  # Define the test model in each dimension, apply AKMCS and perform the Sobol analysis
+  k=5
   seed<- node*k
   set.seed(seed)
   
@@ -220,5 +229,5 @@ for(k in 1:3){
       }
     }
   }
+  
 }
-

@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-#SBATCH --job-name=4_6_node1
-#SBATCH --output=4_6_node1_output.%j.out
+#SBATCH --job-name=4_30D_diffseeds
+#SBATCH --output=4_30D_diffseeds_output.%j.out
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --mem=20GB
+#SBATCH --ntasks-per-node=4
+#SBATCH --mem=80GB
 #SBATCH --time=144:00:00
 #SBATCH --account=pches_cr_default
 #SBATCH --partition=himem
@@ -14,6 +14,6 @@ echo "Job started on `hostname` at `date`"
 
 module load r
 cd /storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial
-Rscript 4_AKMCS6_node1.R
+Rscript 4_30D_diffseeds.R
 
 echo "Job Ended at `date`"
