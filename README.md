@@ -40,11 +40,12 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
     * `6_compareRhosAcrossModels.R` and `6_compareRhosAcrossModels_0.05.R` (NE) compare how well the rankings produced by each of the emulation-based approaches match the rankings given by standard Sobol'.
 
 4. Scripts starting with 7_ generate plots to compare sensitivity analysis approaches.
-    * `7_SamFig2_MeanBests.R` produces Figure 2 in the manuscript which shows for what model run times and numbers of model runs there is a fastest approach across all models.
-    * Scripts starting with `7_SamFig3` produce parts a, b, and c of Figure 3 in the manuscript. `7_SamFig3_G_Mean.R` produces part a; `7_SamFig3_Poly_Mean.R` produces part b, and `7_SamFig3_Hymod_SACSMA10_Mean.R` produces part c. These figures show how much time using the fastest approach saves on average compared to the slowest approach for each model.
-    * `7_SamFig4_BiggestRangeTextMat.R` produces Figure 4 in the manuscript which shows which approach has the most variable computational needs across all models and seeds.
-    * `7_SamFig5_SobolEnough.R` produces Figure 5 in the manuscript which shows whether standard Sobol' is fast enough to justify not using an emulation-based approach.
-    * Scripts starting with `7_SamFigSupplement` produce parts a, b, and c of the figure in the supplementary material which shows how long Sobol' sensitivity analysis takes using the fastest approach for (a) the G function, (b) the polynomial, (c) Hymod, and (c) SACSMA.
+    * `7_Fig2_MeanBests.R` produces Figure 2 in the manuscript which shows for what model run times and numbers of model runs there is a fastest approach across all models.
+    * Scripts starting with `7_Fig3` produce parts a, b, and c of Figure 3 in the manuscript. `7_Fig3a_G_Mean.R` produces part a; `7_Fig3b_Poly_Mean.R` produces part b, and `7_Fig3c_Hymod_SACSMA10_Mean.R` produces part c. These figures show how much time using the fastest approach saves on average compared to the slowest approach for each model.
+    * `7_Fig4_BiggestRangeTextMat.R` produces Figure 4 in the manuscript which shows which approach has the most variable computational needs across all models and seeds.
+    * `7_Fig5_SobolEnough.R` produces Figure 5 in the manuscript which shows whether standard Sobol' is fast enough to justify not using an emulation-based approach.
+    * `7_GraphicalAbstract_Recommendations.R` produces the figure in the graphical abstract showing which approach we recommend.
+    * Scripts starting with `7_FigSupplement` produce parts a, b, and c of the figure in the supplementary material which shows how long Sobol' sensitivity analysis takes using the fastest approach for (a) the G function, (b) the polynomial, (c) Hymod, and (c) SACSMA.
 
 *Scripts to run for additional checks*
 1. decomposeTotalTimes.R analyzes what steps of sensitivity analysis take longest and shortest for each method and how the time needed for different steps varies between methods.
@@ -54,7 +55,7 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
 1. `arnosubbiano.rda` contains data to run Hymod.
 2. `SacSma_dataframe` contains data to run SACSMA.
 3. The folder `Compare` contains the analysis results for comparison. Your results may vary if your computing environment differs from that used for the analysis or if you change the random seeds used. Within the `Compare` folder:
-   * `Sam_Figures` contains the final figures for comparison. Figures that appear in the manuscript have names starting with `FigFIGURENUMBER_` where FIGURENUMBER can be 2, 3a, 3b, 3c, 4, or 5.
+   * `Sam_Figures` contains the final figures for comparison. Figures that appear in the manuscript have names starting with `FigFIGURENUMBER_` where FIGURENUMBER can be 2, 3a, 3b, 3c, 4, or 5. The figure in the graphical abstract is titled
    * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
    * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
 
