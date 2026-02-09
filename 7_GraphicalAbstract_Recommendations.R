@@ -48,7 +48,7 @@ text_recommend[text_recommendations=="None"]<- "Varies"
 #cols<-brewer.pal(n = 3, name = "Set3")
 cols<-c("white","orange","purple")
 
-pdf(file = "./Sam_Figures/RecommendedApproach.pdf",width = 12,height = 7)
+pdf(file = "./Sam_Figures/GraphicalAbstract_Recommendations.pdf",width = 12,height = 7)
 par(mar=c(5,5,2.6,6))
 plot(text_recommend[nrow(text_recommend):1, ],breaks = c("Varies","AKMCS","Standard"),
      xlab="Model run time",ylab="Number of model parameters",col=cols,
