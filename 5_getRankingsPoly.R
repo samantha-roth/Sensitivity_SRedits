@@ -5,7 +5,7 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
 
 source("0_libraryPoly.R")
 
