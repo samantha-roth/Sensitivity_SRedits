@@ -7,33 +7,21 @@
 rm(list = ls())
 graphics.off()
 
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# dir<- commandArgs(trailingOnly=TRUE)
+# setwd(dir)
 
 source("0_libraryPoly.R")
 source("bass_mcmc_size.R")
 source("check_T_convergence.R")
 
-print("3_BASS3_mmESS100_diffseeds.R")
+# Set a random seed
+set.seed(33)
+
+print("3_2-10D.R")
 
 # Define the model in each dimension and apply BASS method
-k=3
-
-#necessary packages for parallelization
-library("foreach")
-library("doParallel")
-
-#setup parallel backend to use many processors
-cores=detectCores()
-cl <- makeCluster(cores[1]-1) # -1 not to overload system
-registerDoParallel(cl)
-
-
-#foreach executes the code within the brackets separately on each node
-foreach(node = 1:3)%dopar%{ 
-  
-  source("0_libraryPoly.R")
-  source("bass_mcmc_size.R")
-  
+for(k in 1:3){
   T_LHS_BASS<- vector()
   T_BASS<- vector()
   T_pred_BASS<- vector()
@@ -44,11 +32,8 @@ foreach(node = 1:3)%dopar%{
   # Model dimension
   d=D[k]
   
-  seed<- node*k
-  set.seed(seed)
-  
   # Folder for d dimension test scenario
-  folder <- paste0(folderpath,d,"D/BASS_mmESS/seed",seed)
+  folder <- paste0(folderpath,d,"D/BASS_mmESS")
   if (!dir.exists(folder)) dir.create(file.path(folder), showWarnings = FALSE)
   
   # Use 20,000 LHS training data points to test emulator quality
@@ -161,4 +146,5 @@ foreach(node = 1:3)%dopar%{
   }
   
 }
+
 
