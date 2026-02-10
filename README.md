@@ -4,6 +4,17 @@ Before installing the necessary R packages, we recommend updating R to version 4
 
 This analysis contains four options of computer models: Sobol's G function, a simple polynomial function, Hymod, and SAC-SMA. This analysis also contains six options of numbers of model parameters (2, 5, 10, 15, 20, 30) for the G function and the polynomial. When the number of parameters is 15 or more, obtaining sensitivity analysis results for the G function may take a very long time. We recommend using a high-performance computing system to run these codes.
 
+## Quick reproducibility check
+
+Reproducing the main results of the accompanying manuscript takes over a month. If you're not quite that patient, you can check that our code runs and produces the intended results for a single random seed and a smaller numbers of parameters (2, 5, 10). For the polynomial function, go to the `polynomial` folder and run the R scripts `1_2-10D.R`, `2_2-10D.R`, `3_2-10D.R`, and `4_2-10D.R` to use all sensitivity analysis approaches. Then run the R script `check2-10Dresults.R` and check whether your results are the same as those provided. We provide an example of how to do this on a Mac.
+1. Open the terminal.
+2. Use the `cd` command to make sure you are in the directory where the folder `Sensitivity_SRedits` is located.
+3. Enter `cd Sensitivity_SRedits/polynomial`.
+4. Enter `chmod +x run_all2-10D_node0.sh` to make your script executable.
+5. Enter `./run_all2-10D_node0.sh` to execute the script. This script runs the aforementioned R scripts.
+6. Lots of output will be generated tracking the progress of running each R script. To compare your results to ours, scroll all the way to the bottom of the output and see how "your rho" compares to "my rho" for each number of parameters (2, 5, 10) and approach (AKMCS, BASS, Kriging).
+
+
 ## Description of scripts
 
 *Scripts that are called during the analysis*
