@@ -1,7 +1,7 @@
 # This script records all the global variables, functions and libraries
 
 #The working folder with scripts and data
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision")
 
 # Load the required functions and packages
 source("sobol_indices_boot.R")

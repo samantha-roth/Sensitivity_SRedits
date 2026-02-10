@@ -8,8 +8,8 @@ rm(list = ls())
 graphics.off()
 
 # setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
-dir<- commandArgs(trailingOnly=TRUE)
-setwd(dir)
+# dir<- commandArgs(trailingOnly=TRUE)
+# setwd(dir)
 
 source("0_libraryPoly.R")
 source("bass_mcmc_size.R")

@@ -2,10 +2,10 @@
 
 #The working folder with scripts and data
 # testing
-setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
+# setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
 
 # Load the required functions and packages
-source("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/sobol_indices_boot.R")
+source("/Users/f007f8t/Documents/GitHub/Sensitivity_SRedits/sobol_indices_boot.R")
 
 library(GPfit)
 library(lhs)

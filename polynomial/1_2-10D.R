@@ -9,8 +9,8 @@ rm(list = ls())
 graphics.off()
 
 # setwd("/storage/group/pches/default/users/svr5482/Sensitivity_paper_revision/polynomial")
-dir<- commandArgs(trailingOnly=TRUE)
-setwd(dir)
+# dir<- commandArgs(trailingOnly=TRUE)
+# setwd(dir)
 
 source("0_libraryPoly.R")
 
@@ -21,8 +21,8 @@ T_check_Sobol<- vector()
 all_eval_times<- vector()
 
 # Define the test model in each dimension and perform the Sobol analysis
-k=3
-# for(k in 1:3){
+
+for(k in 1:3){
   # d dimensional model
   set.seed(k)
   d <- D[k]
@@ -128,4 +128,4 @@ k=3
       
     }
   }
-# }
+}
