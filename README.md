@@ -84,5 +84,5 @@ Scripts marked with (NE) next to them are not essential to run to reproduce publ
    * `Sam_Figures` contains the final figures for comparison. Figures that appear in the manuscript have names starting with `FigFIGURENUMBER_` where FIGURENUMBER can be 2, 3a, 3b, 3c, 4, or 5. The figure in the graphical abstract is titled `GraphicalAbstract_Recommendations.pdf`.
    * `Ranking_Data` contains quantities computed in codes starting with `5_` and `6_`.
    * `polynomial/Ranking_Data` contains quantities computed in codes starting with `5_` and `6_` pertaining to the polynomial function.
-
-** For Sobol's G function, note that `2`, `3` and `4` scripts take a very long time to run when k= 5 or 6, you may begin with low-dimensional test functions to make sure the script can run successfully.
+  
+*Issues? Email samantha.m.roth@dartmouth.edu*
