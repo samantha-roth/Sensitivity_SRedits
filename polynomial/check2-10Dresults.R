@@ -179,21 +179,23 @@ for(k in 1:3){
 
 for(k in 1:3){
   print(paste0(D[k],"D"))
-  print(paste0("AKMCS: rho=", all_Rho_AKMCS_node0[k]))
-  print(paste0("BASS: rho=", all_Rho_BASS_node0[k]))
-  print(paste0("Kriging: rho=", all_Rho_Kriging_node0[k]))
+  print(paste0("AKMCS: your rho=", all_Rho_AKMCS_node0[k]))
+  print(paste0("BASS: your rho=", all_Rho_BASS_node0[k]))
+  print(paste0("Kriging: your rho=", all_Rho_Kriging_node0[k]))
+  if(k==1){
+    print(paste0("AKMCS: my rho=", 0))
+    print(paste0("BASS: my rho=", 0))
+    print(paste0("Kriging: my rho=", 0))
+  }
+  if(k==2){
+    print(paste0("AKMCS: my rho=", 0.0134416481174996))
+    print(paste0("BASS: my rho=", 0.0771794295819732))
+    print(paste0("Kriging: my rho=", 0.00761025504752504))
+  }
+  if(k==3){
+    print(paste0("AKMCS: my rho=", 0.204985665348551))
+    print(paste0("BASS: my rho=", 0.0963638861666487))
+    print(paste0("Kriging: my rho=", 0.558069028141977))
+  }
 }
 
-# if you get the results below, your results match
-# [1] "2D"
-# [1] "AKMCS: rho=0"
-# [1] "BASS: rho=0"
-# [1] "Kriging: rho=0"
-# [1] "5D"
-# [1] "AKMCS: rho=0.0134416481174996"
-# [1] "BASS: rho=0.0771794295819732"
-# [1] "Kriging: rho=0.00761025504752504"
-# [1] "10D"
-# [1] "AKMCS: rho=0.204985665348551"
-# [1] "BASS: rho=0.0963638861666487"
-# [1] "Kriging: rho=0.558069028141977"

@@ -15,9 +15,6 @@ source("0_libraryPoly.R")
 source("bass_mcmc_size.R")
 source("check_T_convergence.R")
 
-# Set a random seed
-set.seed(33)
-
 print("3_2-10D.R")
 
 # Define the model in each dimension and apply BASS method
@@ -29,6 +26,8 @@ for(k in 1:3){
   T_check_BASS<- vector()
   T_model_BASS<- vector()
   
+  # Set a random seed
+  set.seed(33)
   # Model dimension
   d=D[k]
   
